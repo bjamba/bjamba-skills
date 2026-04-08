@@ -1,0 +1,47 @@
+{
+  "skill_name": "teach-me",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "teach me how to pair wines with cheeses. I love hosting dinner parties and I always just guess randomly. I have about 2 months before a big party I'm hosting and I want to actually know what I'm doing by then. I'm not super techy — I mostly just use my laptop for email and browsing.",
+      "expected_output": "A scaffolded repo with HTML-based lessons, interactive tools (flashcards, quizzes, pairing reference), a dashboard.html progress tracker, and a curriculum.json. Everything should be openable by double-clicking — no terminal commands.",
+      "files": [],
+      "expectations": [
+        "A dashboard.html file exists at the repo root with visual progress tracking",
+        "Lessons are primarily .html files, not .md files (markdown is OK for README and TUTOR_CONTEXT only)",
+        "At least two different types of interactive HTML tools exist (e.g., flashcards AND quiz, or reference card AND matching game)",
+        "A curriculum.json file is created with modules, lessons, and progress tracking",
+        "The curriculum includes a variety of activity types, not just 'read lesson then do exercise'",
+        "No technical jargon or terminal commands appear in learner-facing materials"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "I'm a junior data scientist (about 1 year of experience with Python and pandas) and I want to get better at machine learning. specifically I want to understand how to build and evaluate classification models. I've got maybe 3-4 months and I can dedicate about an hour a day. teach me",
+      "expected_output": "A repo with Jupyter notebook lessons (not raw .py files), interactive HTML tools for concept review, a dashboard.html progress tracker, and a curriculum.json. Should include fun/engaging elements alongside the technical content.",
+      "files": [],
+      "expectations": [
+        "A dashboard.html file exists at the repo root with visual progress tracking",
+        "Lessons use Jupyter notebooks (.ipynb) rather than raw .py files for narrative content",
+        "At least one interactive HTML tool exists (quiz, flashcards, or cheat sheet)",
+        "A curriculum.json file is created with a progression from basic to advanced classification",
+        "The curriculum includes variety beyond just notebooks — some interactive review, reference tools, or fun elements",
+        "Model evaluation concepts (confusion matrix, precision/recall, cross-validation) are covered"
+      ]
+    },
+    {
+      "id": 5,
+      "prompt": "this is kind of different but... teach me how to be a better listener. I've been getting feedback at work that I interrupt people and jump to solutions too fast, and my partner has said similar things. I don't really know where to start with something like this. it's not like there's a textbook for it.",
+      "expected_output": "A repo with HTML-based lessons (not flat .md or .txt), interactive self-reflection tools, a dashboard.html progress tracker, and a curriculum.json. Should feel warm and engaging, not like reading a textbook.",
+      "files": [],
+      "expectations": [
+        "A dashboard.html file exists at the repo root with visual progress tracking",
+        "Lessons are primarily .html files that are visually engaging to read",
+        "At least one interactive HTML tool for self-reflection or practice (e.g., conversation replay, listening journal, self-check)",
+        "A curriculum.json file is created with modules progressing from awareness to practice",
+        "Exercises include real-world conversation scenarios, not abstract theory",
+        "Tone is warm and non-judgmental throughout — no clinical or lecture-like language"
+      ]
+    }
+  ]
+}
