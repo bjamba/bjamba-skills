@@ -37,7 +37,19 @@ For technical topics, it uses Jupyter notebooks instead of raw code files. For n
 
 ## Installation
 
-Copy the `teach-me/` directory into your Claude Code skills location, or point Claude Code at this repo.
+**One-liner (personal install — available in all your projects):**
+
+```bash
+git clone https://github.com/bjamba/teach-me-skill.git ~/.claude/skills/teach-me-skill
+```
+
+**Per-project install (available only in a specific project):**
+
+```bash
+git clone https://github.com/bjamba/teach-me-skill.git .claude/skills/teach-me-skill
+```
+
+After installing, restart your Claude Code session. The skill will be available as `/teach-me` or will activate automatically when you ask Claude to help you learn something.
 
 ## Structure
 
