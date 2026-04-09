@@ -5,5 +5,6 @@ Thumbs.db
 # Claude
 .claude/
 
-# Eval workspace (large generated files, not needed in repo)
+# Eval workspaces (large generated files, not needed in repo)
 teach-me-workspace/
+continuity-check-workspace/

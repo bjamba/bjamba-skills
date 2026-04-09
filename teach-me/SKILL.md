@@ -334,8 +334,53 @@ The progress tracking isn't just for you — it's for them. That's why `dashboar
 ### Respect Their Time
 If they said "30 minutes a day", design sessions that fit that. Don't create 2-hour lessons for someone who has 20 minutes. Break things into pieces that match their stated timeframe.
 
+### Relative Paths — Always
+
+Every link between HTML files must use relative paths. Never use absolute paths or root-relative paths (starting with `/`). The learner will open files directly in their browser from the filesystem, so paths must resolve correctly from the file's own location.
+
+The pattern depends on where the file lives in the directory tree:
+
+| From → To | Correct relative path |
+|---|---|
+| `dashboard.html` → `module-01/lesson-01.html` | `module-01/lesson-01.html` |
+| `module-01/lesson-01.html` → `dashboard.html` | `../dashboard.html` |
+| `module-01/lesson-01.html` → `module-01/lesson-02.html` | `lesson-02.html` |
+| `module-01/lesson-01.html` → `module-02/lesson-01.html` | `../module-02/lesson-01.html` |
+| `module-01/exercises/exercise-01.html` → `../lesson-01.html` | `../lesson-01.html` |
+| `module-01/exercises/exercise-01.html` → `dashboard.html` | `../../dashboard.html` |
+
+Before writing any link, count the directory depth from the current file to the target file and construct the path accordingly. Every page should be reachable via navigation — verify mentally that a learner can get from dashboard → any lesson → any exercise → next lesson → next module → back to dashboard without a broken link.
+
 ### No Dangling References
 If a lesson or notebook references a data file, script, or resource — make sure that file actually exists in the repo. Don't write code that loads `data/dataset.csv` without creating that CSV. If a dataset needs to be generated programmatically, include the generation script and run instructions. Broken references kill trust and momentum.
+
+### Code Topics: In-Page Editor + Real Source Files
+
+When the topic is a programming language, framework, or anything where the learner will write and run code, provide **both**:
+
+1. **The in-page code editor** (using a library like CodeMirror or Monaco via CDN, or a `<textarea>` with syntax highlighting at minimum) — great for reading, experimenting, and seeing output inline. Keep this in the lesson HTML so learners can modify examples without leaving the page.
+
+2. **Actual source files** they can run or compile. Put these alongside the HTML in the exercise directory:
+   ```
+   module-01/exercises/
+     exercise-01.html          # interactive lesson/editor
+     exercise-01.py            # runnable Python file with the same code
+     exercise-01-solution.py   # solution (kept separate so they can try first)
+   ```
+
+For compiled languages, include the full project structure:
+   ```
+   module-01/exercises/exercise-01-rust/
+     exercise-01.html          # lesson with embedded editor
+     src/
+       main.rs                 # starter file with TODOs to fill in
+     Cargo.toml
+     README.md                 # "Run with: cargo run"
+   ```
+
+Always include a short README or inline comment in the source file telling them how to run it (`python exercise-01.py`, `cargo run`, `node index.js`, etc.). Don't assume they know the command.
+
+The in-page editor is where they *read and experiment*. The source files are what they *actually build and run*. Both serve the learning — don't choose one over the other for code topics.
 
 ### Be Honest About Limitations
 If they want to learn something that really needs hands-on physical practice (like playing guitar), be upfront that you can teach theory, provide exercises, and structure practice sessions, but you can't hear them play. Suggest complementary resources (YouTube channels, local classes) where appropriate.

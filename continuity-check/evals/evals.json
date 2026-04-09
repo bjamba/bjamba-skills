@@ -1,0 +1,34 @@
+{
+  "skill_name": "continuity-check",
+  "evals": [
+    {
+      "id": 1,
+      "name": "eval-fiction-short-story",
+      "prompt": "/continuity-check ./test-fixtures/short-story/",
+      "expected_output": "An interactive website in a continuity output folder with: character profiles for Kira, Cross, Holt, Marsh, and others; a timeline of events across 3 chapters; deviation flags for at least 5 embedded continuity errors (ocean name, hotel name, beard, car brand, age math); world-bible entries; relationship map; continuity scores; and a working annotation system.",
+      "files": [
+        "continuity-check-workspace/test-fixtures/short-story/chapter1.txt",
+        "continuity-check-workspace/test-fixtures/short-story/chapter2.txt",
+        "continuity-check-workspace/test-fixtures/short-story/chapter3.txt"
+      ]
+    },
+    {
+      "id": 2,
+      "name": "eval-nonfiction-news",
+      "prompt": "/continuity-check ./test-fixtures/news-articles/",
+      "expected_output": "An interactive website analyzing 3 news articles for factual consistency. Should flag: the project cost changing ($42M vs $45M), the vote result contradiction (7-2 vs unanimous), Whitfield's vote flip, building count changes (14 vs 18), phase 1 location flip (north vs south), housing terminology change. Should present entities (Torres, Chen, Whitfield, Meridian), a timeline, and a claims registry.",
+      "files": [
+        "continuity-check-workspace/test-fixtures/news-articles/article1.txt",
+        "continuity-check-workspace/test-fixtures/news-articles/article2.txt",
+        "continuity-check-workspace/test-fixtures/news-articles/article3.txt"
+      ]
+    },
+    {
+      "id": 3,
+      "name": "eval-url-fetch",
+      "prompt": "/continuity-check https://www.gutenberg.org/files/11/11-0.txt",
+      "expected_output": "Should fetch Alice's Adventures in Wonderland from Project Gutenberg, analyze it for continuity (character consistency for Alice, the White Rabbit, Cheshire Cat, Queen of Hearts, etc.), generate timeline of Alice's journey, track world rules (Wonderland logic), and produce an interactive website with a whimsical auto-detected theme.",
+      "files": []
+    }
+  ]
+}
