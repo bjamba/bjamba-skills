@@ -41,19 +41,45 @@ For technical topics, it uses Jupyter notebooks instead of raw code files. For n
 
 ## Installation
 
-**One-liner (personal install — available in all your projects):**
+Claude Code discovers skills one level deep in `~/.claude/skills/`. Since this repo contains multiple skills in subdirectories, you clone it once and then symlink each skill into the right place.
+
+**Personal install (available in all your projects):**
 
 ```bash
+# 1. Clone the repo
 git clone https://github.com/bjamba/bjamba-skills.git ~/.claude/skills/bjamba-skills
+
+# 2. Symlink each skill into the Claude Code skills directory
+ln -sf ~/.claude/skills/bjamba-skills/teach-me ~/.claude/skills/teach-me
+ln -sf ~/.claude/skills/bjamba-skills/continuity-check ~/.claude/skills/continuity-check
+```
+
+Restart your Claude Code session. Skills will be available by their slash command (e.g. `/teach-me`) or will activate automatically based on context.
+
+**Updating:**
+
+```bash
+cd ~/.claude/skills/bjamba-skills && git pull
+```
+
+No re-linking needed — the symlinks automatically point to the updated files.
+
+**Adding a newly released skill:**
+
+When a new skill is added to this repo, pull and add one new symlink:
+
+```bash
+cd ~/.claude/skills/bjamba-skills && git pull
+ln -sf ~/.claude/skills/bjamba-skills/new-skill-name ~/.claude/skills/new-skill-name
 ```
 
 **Per-project install (available only in a specific project):**
 
 ```bash
 git clone https://github.com/bjamba/bjamba-skills.git .claude/skills/bjamba-skills
+ln -sf .claude/skills/bjamba-skills/teach-me .claude/skills/teach-me
+ln -sf .claude/skills/bjamba-skills/continuity-check .claude/skills/continuity-check
 ```
-
-After installing, restart your Claude Code session. Skills will be available by their slash command (e.g. `/teach-me`) or will activate automatically based on context.
 
 ## Structure
 
