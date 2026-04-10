@@ -4,29 +4,66 @@
     {
       "id": 1,
       "prompt": "teach me how to pair wines with cheeses. I love hosting dinner parties and I always just guess randomly. I have about 2 months before a big party I'm hosting and I want to actually know what I'm doing by then. I'm not super techy — I mostly just use my laptop for email and browsing.",
-      "expected_output": "A scaffolded repo with HTML-based lessons, interactive tools (flashcards, quizzes, pairing reference), a dashboard.html progress tracker, and a curriculum.json. Everything should be openable by double-clicking — no terminal commands.",
+      "expected_output": "A scaffolded repo with HTML-based lessons, interactive tools (flashcards, quizzes, pairing reference), a dashboard.html progress tracker, and a curriculum.json. Everything should be openable by double-clicking — no terminal commands. Should include Phase 0 upfront questions (scope/budget/seriousness/platform) and a token cost estimate before building.",
       "files": [],
       "expectations": [
+        "Phase 0 questions are asked before building (scope, budget, seriousness, platform)",
+        "A token/cost estimate is given before the build begins",
         "A dashboard.html file exists at the repo root with visual progress tracking",
-        "Lessons are primarily .html files, not .md files (markdown is OK for README and TUTOR_CONTEXT only)",
-        "At least two different types of interactive HTML tools exist (e.g., flashcards AND quiz, or reference card AND matching game)",
+        "All lesson content is .html files (not .md), with consistent nav headers linking back to dashboard",
+        "At least two different interactive HTML tools (e.g., flashcards AND quiz, or reference card AND matching game)",
         "A curriculum.json file is created with modules, lessons, and progress tracking",
-        "The curriculum includes a variety of activity types, not just 'read lesson then do exercise'",
-        "No technical jargon or terminal commands appear in learner-facing materials"
+        "A credits.html is created if any external sources are referenced",
+        "No technical jargon or terminal commands appear in learner-facing materials",
+        "Budget & timeline section appears in dashboard.html or README.md"
       ]
     },
     {
       "id": 2,
       "prompt": "I'm a junior data scientist (about 1 year of experience with Python and pandas) and I want to get better at machine learning. specifically I want to understand how to build and evaluate classification models. I've got maybe 3-4 months and I can dedicate about an hour a day. teach me",
-      "expected_output": "A repo with Jupyter notebook lessons (not raw .py files), interactive HTML tools for concept review, a dashboard.html progress tracker, and a curriculum.json. Should include fun/engaging elements alongside the technical content.",
+      "expected_output": "A repo with Jupyter notebook lessons (not raw .py files), interactive HTML tools for concept review, a dashboard.html progress tracker, and a curriculum.json. Should include fun/engaging elements alongside the technical content, plus Phase 0 upfront options and a cost estimate.",
       "files": [],
       "expectations": [
+        "Phase 0 questions are asked before building (scope, budget, seriousness, platform)",
+        "A token/cost estimate is given before the build begins",
         "A dashboard.html file exists at the repo root with visual progress tracking",
         "Lessons use Jupyter notebooks (.ipynb) rather than raw .py files for narrative content",
-        "At least one interactive HTML tool exists (quiz, flashcards, or cheat sheet)",
+        "At least one interactive HTML tool (quiz, flashcards, or cheat sheet)",
         "A curriculum.json file is created with a progression from basic to advanced classification",
         "The curriculum includes variety beyond just notebooks — some interactive review, reference tools, or fun elements",
-        "Model evaluation concepts (confusion matrix, precision/recall, cross-validation) are covered"
+        "Model evaluation concepts (confusion matrix, precision/recall, cross-validation) are covered",
+        "Budget & timeline section appears in dashboard.html or README.md"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "I want to learn how to play piano. I'm a complete beginner — I've never played any instrument before. I want to be able to play simple songs within a few months. I mostly have a keyboard at home and about 20 minutes a day.",
+      "expected_output": "A repo with a virtual keyboard tool built with Tone.js that plays notes on click or keyboard press, ear training exercises, music theory lessons as HTML, and a dashboard. The virtual instrument should be on the same page as exercises that use it — not a separate tool.",
+      "files": [],
+      "expectations": [
+        "Phase 0 questions are asked before building (scope, budget, seriousness, platform)",
+        "A virtual keyboard or instrument is built using Tone.js (or similar audio library)",
+        "The virtual instrument is playable by clicking or pressing keyboard keys",
+        "Exercises that require hearing/playing notes have the instrument on the same page — not just linked to a separate tool",
+        "Ear training exercises exist that play notes/intervals and ask the learner to identify them",
+        "A dashboard.html exists with progress tracking",
+        "A curriculum.json is created",
+        "The skill acknowledges the virtual/physical gap (virtual keyboard can't replace tactile practice)"
+      ]
+    },
+    {
+      "id": 4,
+      "prompt": "teach me origami. I want to learn how to fold a crane, a frog, and a few other things. I'm a complete beginner.",
+      "expected_output": "A repo with a step-by-step animated folding tutorial — each step should animate the fold using CSS/SVG/Anime.js, not just show a static diagram. The experience should feel like actually folding paper.",
+      "files": [],
+      "expectations": [
+        "At least one step-by-step fold tutorial exists with animated fold steps (not just static images)",
+        "Animation uses Anime.js, GSAP, or CSS transitions to show the fold motion",
+        "Each step has a 'next' button and shows the current state of the paper",
+        "Navigation between pages uses consistent nav headers with relative links back to dashboard",
+        "dashboard.html exists with progress tracking",
+        "credits.html exists if any reference images or diagrams are used",
+        "Budget & timeline section appears in dashboard.html or README.md"
       ]
     },
     {
@@ -35,12 +72,14 @@
       "expected_output": "A repo with HTML-based lessons (not flat .md or .txt), interactive self-reflection tools, a dashboard.html progress tracker, and a curriculum.json. Should feel warm and engaging, not like reading a textbook.",
       "files": [],
       "expectations": [
+        "Phase 0 questions are asked before building (scope, budget, seriousness, platform)",
         "A dashboard.html file exists at the repo root with visual progress tracking",
-        "Lessons are primarily .html files that are visually engaging to read",
+        "Lessons are primarily .html files with consistent nav headers linking back to dashboard",
         "At least one interactive HTML tool for self-reflection or practice (e.g., conversation replay, listening journal, self-check)",
         "A curriculum.json file is created with modules progressing from awareness to practice",
         "Exercises include real-world conversation scenarios, not abstract theory",
-        "Tone is warm and non-judgmental throughout — no clinical or lecture-like language"
+        "Tone is warm and non-judgmental throughout — no clinical or lecture-like language",
+        "Budget & timeline section appears in dashboard.html or README.md"
       ]
     }
   ]
