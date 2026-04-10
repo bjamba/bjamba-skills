@@ -48,7 +48,12 @@ How the answers cascade:
 
 If they're unsure, suggest sensible defaults — local + free works for almost anyone starting out. Confirm before proceeding.
 
-**Before building anything — before planning, before creating a single file — give a cost estimate.** This is the very first thing you do after Phase 0 is confirmed. Do not start outlining modules or creating files first. The estimate must come first.
+**The very first thing you output — before Phase 0 assumptions, before any planning, before a single file — is the cost estimate.** The order is strict:
+
+1. Output the cost estimate and ask for confirmation
+2. State your Phase 0 assumptions
+3. Begin Phase 1 (the interview)
+4. Build
 
 | Scope | Approx. tokens | Cost at ~$0.003/1K output tokens (Sonnet) |
 |---|---|---|
@@ -56,11 +61,11 @@ If they're unsure, suggest sensible defaults — local + free works for almost a
 | Moderate (4–6 modules, several interactive tools) | ~80,000–150,000 | ~$0.25–0.45 |
 | Comprehensive (6+ modules, rich interactives, virtual instruments/studios) | ~150,000–300,000+ | ~$0.45–0.90+ |
 
-These are output token estimates only; input tokens add a smaller additional cost. Say it like this, before doing anything else:
+Say it like this, as your opening line:
 
-> "Before I start building: this looks like a moderate build — probably around 100,000 tokens, which costs roughly $0.30 at current rates. Want me to go ahead?"
+> "Before I start: this looks like a moderate build — probably around 100,000 tokens, which costs roughly $0.30 at current rates. Want me to go ahead?"
 
-Then wait for confirmation. Only after they say go ahead do you proceed to Phase 1.
+Wait for confirmation. Then state Phase 0 assumptions. Then begin the interview.
 
 ---
 
