@@ -1,0 +1,67 @@
+{
+  "skill_name": "draft-me",
+  "evals": [
+    {
+      "id": 1,
+      "name": "init-fresh-corpus",
+      "prompt": "I want to start using draft-me for my cover letters in this folder. Set me up with the default folder names.",
+      "setup": "Empty git-initialized folder, no .draft-me.json.",
+      "assertions": [
+        "Workspace contains .draft-me.json at the root",
+        "Workspace has user-owned folder 'format-samples/'",
+        "Workspace has user-owned folder 'voice-samples/'",
+        "Workspace has user-owned folder 'about-me/'",
+        "Workspace has skill-managed folder '_drafts/' (underscore prefix)",
+        "Workspace has skill-managed folder '_finals/' (underscore prefix)",
+        "Workspace has skill-managed folder '_meta/' (underscore prefix)",
+        "Git log contains a commit with message 'Set up draft-me'",
+        "Response briefs the user on what each folder is for",
+        "Response explains the underscore-prefix convention",
+        "Response tells the user how to start a drafting session",
+        "Response does NOT use the word 'corpus' in user-facing text — case-insensitive check on the full response"
+      ]
+    },
+    {
+      "id": 2,
+      "name": "full-draft-session-from-configured-corpus",
+      "prompt": "/draft-me a cover letter for Zillow for a Senior Software Engineer role on their infra team. I want to emphasize that I built distributed tracing at Acme and led a multi-region Kafka migration. Goal is to get to a phone screen. Here's the relevant bit of the JD: 'We're looking for senior engineers to help scale our listings and search infrastructure as we expand personalized recommendations. You'll work on systems that serve 200M+ users. Strong background in distributed systems, observability, and reliability expected.'",
+      "setup": "Configured corpus (.draft-me.json + format-samples/ with 2 cover letters + voice-samples/ with 1 post-mortem excerpt + about-me/ with resume summary). Git-initialized with initial commit.",
+      "assertions": [
+        "A session folder was created at _meta/sessions/<something-zillow>/",
+        "Session folder contains a session.md file",
+        "Session folder contains a context/ subdirectory with the JD text snapshotted",
+        "Response shares a voice summary with 3+ specific observations (not generic adjectives)",
+        "Voice summary includes at least one direct quote or phrase from the actual corpus",
+        "Voice summary notes at least one 'avoids' pattern derived from the corpus",
+        "Voice summary EVALUATES the corpus, not just describes it — response body contains at least 2 distinct evaluative signals (e.g., 'strongest', 'weaker', 'formulaic', 'overused', 'working hardest', 'push you', 'lean into', 'lean away', 'thinner', 'at risk of'). Listing observations without saying which moves work better or worse fails this check.",
+        "Response does NOT jump straight to writing a full draft — stops at ORIENT or BRAINSTORM to confirm direction",
+        "Response stops at a single phase boundary — does NOT pack ORIENT + BRAINSTORM + DRAFT into one response. Response ends with a question for the user (voice-summary confirmation OR brainstorm direction-check), not with an attached v1 draft.",
+        "No _drafts/<session>.md file was created at this stage (the skill should stop at ORIENT or BRAINSTORM, not produce a v1 before the user has weighed in on voice summary / direction)",
+        "Git log contains a commit with a 'Session init' or similar phase-transition message",
+        "Response names the phase it's in (ORIENT or BRAINSTORM) so the user knows where they are"
+      ]
+    },
+    {
+      "id": 3,
+      "name": "review-feedback-integration",
+      "prompt": "The opening feels stiff — make it more specific to what Zillow actually does. I just read that they're putting real effort into personalized listings with ML. Also, cut the paragraph about team size, it reads as bragging and doesn't add anything.",
+      "setup": "Configured corpus with pre-existing mid-session state: session folder with session.md/brainstorm.md/context/, draft v1 and v2 already in git history. User is giving REVIEW feedback.",
+      "assertions": [
+        "The draft file was modified (v3 differs from v2)",
+        "The v3 draft no longer contains the team-size paragraph",
+        "The v3 opening references Zillow specifically (personalization, ML, listings)",
+        "Git log contains a new commit whose message describes the v3 change",
+        "Response includes markdown strikethrough markers (~~) — evidence of inline redline",
+        "Response includes markdown bold markers (**) — evidence of inline redline",
+        "Response includes the clean full v3 text",
+        "Response asks about another pass or finalizing",
+        "The draft file contains only prose — no YAML frontmatter or AI markers",
+        "Response does NOT contain affirmation phrases anywhere — full response does not contain (case-insensitive): 'good call', 'great call', 'great catch', 'nice catch', 'exactly right', 'spot on', 'you\\'re right', 'you were right', 'you nailed', 'great point', 'good point about', 'excellent point', 'perfect call', 'you were correct', 'agreed', 'i agree', 'yes, exactly', 'that\\'s true' (as standalone sentence starts — bare-agreement words)",
+        "Response does NOT announce self-initiated out-of-scope edits — response body does not contain (case-insensitive): 'bonus edit', 'while i was in there', 'small bonus', 'also tweaked', 'went ahead and', 'one small bonus', 'extra edit'",
+        "The v3 draft preserves the v2 first-week-hook phrasing — contains the substring 'under personalization load' verbatim (user did not ask for this to change; modifying it is out-of-scope)",
+        "Response offers to search for the external source the user cued ('I just read…') — response contains (case-insensitive) at least one of: 'want me to search', 'want me to look up', 'should i search', 'want me to find', 'should i look up', 'happy to search', 'i can search', 'i could search'",
+        "Response does NOT use the word 'corpus' in user-facing text — case-insensitive check on the full response"
+      ]
+    }
+  ]
+}
