@@ -552,6 +552,33 @@ Every link between HTML files must use relative paths. Never use absolute paths 
 
 Before writing any link, count directory depth from the current file to the target. Every page must be reachable from every other page — verify this mentally before finishing.
 
+### Hosting-safe code — works on file:// and on a hosted path
+
+A course may start on `file://` and later move to GitHub Pages, Netlify, or a subfolder of a larger site. The course must work identically in every case. Four rules:
+
+**1. Never derive paths from `window.location.pathname`.** That value changes between `file://` (absolute filesystem path), GitHub Pages (prefixed by repo name, e.g. `/my-repo/...`), and custom domains. Any JS that computes path depth by searching for a folder name in `pathname` WILL break when the URL structure shifts.
+
+If you genuinely need to know the prefix to the course root from JS — e.g. to build a link inside a dynamically-inserted widget — read it from your own script's `src` attribute. Whatever prefix was used to load your JS is the same prefix for sibling assets:
+
+```js
+var SELF_SRC = (document.currentScript && document.currentScript.getAttribute("src")) || "";
+function rootPath() {
+  var i = SELF_SRC.indexOf("assets/");
+  return i >= 0 ? SELF_SRC.substring(0, i) : "";
+}
+// from dashboard.html: src="assets/widget.js" → rootPath() returns ""
+// from module-01/index.html: src="../assets/widget.js" → rootPath() returns "../"
+// Works identically on file:// and any hosted path.
+```
+
+**2. Prefix every localStorage key with a per-course namespace.** If multiple courses are served from one origin (a shared GitHub Pages site, for instance), unprefixed keys like `"notes"` or `"progress"` collide between courses. Pick a short namespace for the course (`ude_`, `godot_`, `mlai_`) and apply it to every key that course writes.
+
+**3. Filenames are always lowercase-kebab-case.** macOS is case-insensitive by default; Linux (the OS behind most static hosts) is case-sensitive. `Module-01/Lesson.html` works locally, 404s when hosted. Keep names like `module-01-orientation/lesson-01-foo.html` so this never bites.
+
+**4. Classic scripts only, not ES modules.** `<script type="module" src="...">` fails under `file://` in Chromium browsers (CORS rejection). Use plain `<script src="...">` — they work in both environments and let you share code across pages.
+
+These four rules are small but important: if a course violates any of them, it may pass local testing and silently break when shared.
+
 ### No Dangling References
 If a lesson or notebook references a data file, script, or resource — that file must exist in the repo. Don't write code that loads `data/dataset.csv` without creating that CSV. Broken references kill trust and momentum.
 
