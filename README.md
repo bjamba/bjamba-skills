@@ -100,6 +100,50 @@ The skill also activates automatically when you open a conversation inside an ex
 - **`_meta/sessions/<session-name>/`** — session notes, brainstorm summary, snapshotted context (JDs, reference docs), running references list
 - **`_meta/voice-profile.md`** — the skill's evolving mental model of your voice, updated after every finalized piece
 
+### productionize-me
+
+Takes an existing immature, prototype, or "vibe-coded" codebase and walks you through bringing it to production-grade quality. Audits the code against a tier-calibrated rubric, produces a prioritized plan, lays down concrete scaffolding (CI configs, hooks, secrets handling), retrospectively generates the team-grade design docs / ERDs / ADRs / runbooks the codebase should already have, and writes an enforceable `CLAUDE.md` paired with hooks that prevent regression.
+
+**What it does:**
+
+1. **Calibrates to the right tier** — Tier 1 (personal) through Tier 4 (regulated/safety-critical), so it doesn't over-engineer a weekend script or under-engineer a customer-facing SaaS. Lets you override the recommended tier if you want to aspire higher.
+2. **Audits across 14 dimensions** — testing, security, observability, CI/CD, deps, docs, configuration, data handling, performance, reliability, ops readiness, accessibility, licensing, code structure. Findings are tier-aware (no padding with N/A items dressed up as recommendations).
+3. **Produces a prioritized plan** — M0 (pre-flight), M1 (launch-ready), M2 (mature), M3+ (beyond MVP). Each item has effort sizing and tradeoffs.
+4. **Lays down real scaffolding** — actual files, not just recommendations: `.gitignore`, `.env.example`, `README.md`, CI workflows, pre-commit, `scripts/check.sh` validators, security workflows. Tier-calibrated.
+5. **Writes team-grade retrospective design docs** — `ARCHITECTURE.md` with Mermaid diagrams, `DATA_MODEL.md` with ERDs, `SECURITY_PRIVACY.md`, ADRs, runbooks — all in declarative voice with metadata, written like a senior engineer producing canonical team documentation.
+6. **Threads audit findings into an enforceable CLAUDE.md** — every P0/M0 finding produces a corresponding rule paired with an enforcement mechanism (pre-commit hook, CI gate, custom validator). Prevents regressions in future sessions, by humans or LLMs.
+7. **Three execution paths** — plan-only (you take it from here), in-place modernization on a branch (PR per milestone), or greenfield rebuild (only when the existing code is structurally beyond saving).
+
+**Usage:**
+
+```
+/productionize-me
+```
+
+In any repo. Or naturally:
+
+```
+is this code production grade? we have ~50 daily users and i'm getting nervous
+```
+
+```
+draft me an architecture diagram and ERD for this repo so i can paste them into the new-hire onboarding doc
+```
+
+```
+write the design docs we never wrote
+```
+
+The skill also activates automatically when you open a conversation inside a codebase that already has a `.productionize-me/` directory — it'll resume where the previous session left off.
+
+**What it produces:**
+
+- **`.productionize-me/`** — diagnostic artifacts (`SUMMARY.md`, `AUDIT.md`, `PLAN.md`, `STATE.md`)
+- **`docs/`** — retrospective design docs, organized like the [Hacky Hours](https://github.com/empathetech/hacky-hours-docs) framework: `02-design/`, `adr/`, `runbooks/`, `03-roadmap/`
+- **Repo-root scaffolding** — `README.md`, `.gitignore`, `.env.example`, `LICENSE`, `CHANGELOG.md`, plus tier-appropriate CI/hook/security configs
+- **`CLAUDE.md`** — durable, enforceable guardrails. Every rule is paired with a hook, CI check, or `scripts/check.sh` step that catches violations
+- **`scripts/check.sh`** — runnable repo-specific validator (Tier 2+) that enforces architectural invariants, security rules, and data-handling constraints
+
 ## Installation
 
 Claude Code discovers skills one level deep in `~/.claude/skills/`. Since this repo contains multiple skills in subdirectories, you clone it once and then symlink each skill into the right place.
@@ -114,6 +158,7 @@ git clone https://github.com/bjamba/bjamba-skills.git ~/.claude/skills/bjamba-sk
 ln -sf ~/.claude/skills/bjamba-skills/teach-me ~/.claude/skills/teach-me
 ln -sf ~/.claude/skills/bjamba-skills/continuity-check ~/.claude/skills/continuity-check
 ln -sf ~/.claude/skills/bjamba-skills/draft-me ~/.claude/skills/draft-me
+ln -sf ~/.claude/skills/bjamba-skills/productionize-me ~/.claude/skills/productionize-me
 ```
 
 Restart your Claude Code session. Skills will be available by their slash command (e.g. `/teach-me`, `/draft-me`, `/continuity-check`) or will activate automatically based on context.
@@ -142,6 +187,7 @@ git clone https://github.com/bjamba/bjamba-skills.git .claude/skills/bjamba-skil
 ln -sf .claude/skills/bjamba-skills/teach-me .claude/skills/teach-me
 ln -sf .claude/skills/bjamba-skills/continuity-check .claude/skills/continuity-check
 ln -sf .claude/skills/bjamba-skills/draft-me .claude/skills/draft-me
+ln -sf .claude/skills/bjamba-skills/productionize-me .claude/skills/productionize-me
 ```
 
 ## Structure
@@ -159,9 +205,13 @@ bjamba-skills/
 │   ├── references/
 │   ├── assets/
 │   └── evals/
-└── draft-me/
+├── draft-me/
+│   ├── SKILL.md
+│   ├── scripts/
+│   ├── references/
+│   └── evals/
+└── productionize-me/
     ├── SKILL.md
-    ├── scripts/
     ├── references/
     └── evals/
 ```

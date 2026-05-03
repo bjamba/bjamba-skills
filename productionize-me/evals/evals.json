@@ -1,0 +1,66 @@
+{
+  "skill_name": "productionize-me",
+  "evals": [
+    {
+      "id": 1,
+      "name": "tier1-personal-cli-tool",
+      "prompt": "i wrote this little python script over the weekend that takes my journal entries (markdown files in ~/journal) and uses the openai api to generate a weekly summary i email myself. it's like 200 lines in one file and works fine but i want to make it a little more legit. nothing crazy, just for me. /productionize-me",
+      "expected_output": "Should identify this as Tier 1 (personal/single-user), avoid recommending Sentry/CI/Docker/k8s, focus on: secrets via .env not hardcoded, README, requirements.txt, basic git hygiene. Should NOT pad the audit with N/A items dressed up as recommendations. Should generate a lean CLAUDE.md.",
+      "files": [],
+      "assertions": [
+        {"text": "Explicitly identifies and labels the project as Tier 1", "type": "presence"},
+        {"text": "Generates a SUMMARY.md file with concrete (not placeholder) findings", "type": "artifact"},
+        {"text": "Generates an AUDIT.md file with a tier-1-appropriate score card", "type": "artifact"},
+        {"text": "Generates a PLAN.md with prioritized milestones (M0/M1/M2)", "type": "artifact"},
+        {"text": "Recommends secrets handling (.env + .gitignore) as a P0 or M0 item", "type": "presence"},
+        {"text": "Does NOT recommend Sentry, error tracking SaaS, observability platform, or APM tooling for this Tier 1 project", "type": "absence"},
+        {"text": "Does NOT recommend Docker, Kubernetes, microservices, or container orchestration for this Tier 1 project", "type": "absence"},
+        {"text": "Does NOT recommend formal CI/CD pipelines (GitHub Actions, etc.) for this Tier 1 project, OR explicitly justifies why a minimal one is being suggested", "type": "absence-or-justified"},
+        {"text": "Marks at least one rubric dimension as N/A at Tier 1 (e.g., on-call, accessibility, multi-environment) rather than padding the audit", "type": "presence"},
+        {"text": "Generates a CLAUDE.md or offers to generate one as part of plan-only execution", "type": "artifact-or-offer"},
+        {"text": "PLAN.md or transcript fits within ~1 day of effort total — does not propose multi-week roadmap for a personal weekend script", "type": "calibration"}
+      ]
+    },
+    {
+      "id": 2,
+      "name": "tier2-internal-saas-no-tests",
+      "prompt": "we built an internal tool at work for the ops team to manage customer refunds. about 12 people use it daily. it's a Next.js app talking to Postgres on Supabase. there are zero tests, deploy is `git push` to vercel main branch, secrets are in .env files we share over slack (i know, i know). we have ~3 engineers including me. boss wants us to 'productionize' it before we let our customer success team also use it (~30 more users). where do we start? /productionize-me",
+      "expected_output": "Should pick Tier 2, push back on slack-shared secrets as a P0, prioritize: secrets manager, basic test coverage on refund-write paths, CI gate, error tracking. Should generate retrospective ARCHITECTURE.md and DATA_MODEL.md with Mermaid diagrams. Should generate CLAUDE.md that explicitly forbids future secret-sharing patterns. Should offer Path B (in-place modernization) as the natural fit, NOT Path C.",
+      "files": [],
+      "assertions": [
+        {"text": "Explicitly identifies and labels the project as Tier 2", "type": "presence"},
+        {"text": "Generates SUMMARY.md, AUDIT.md, PLAN.md as separate artifacts", "type": "artifact"},
+        {"text": "Flags slack-shared secrets as P0 / M0 / blocking-production", "type": "presence"},
+        {"text": "Recommends secrets management (Vercel env vars, 1Password, Doppler, or equivalent) as a concrete action", "type": "presence"},
+        {"text": "Recommends test coverage specifically for refund-write paths (the highest-risk operation)", "type": "presence"},
+        {"text": "Recommends error tracking (Sentry, Rollbar, or equivalent) — appropriate at Tier 2", "type": "presence"},
+        {"text": "Generates a retrospective ARCHITECTURE.md with a Mermaid diagram", "type": "artifact"},
+        {"text": "Generates a retrospective DATA_MODEL.md with a Mermaid ERD", "type": "artifact"},
+        {"text": "Generates CLAUDE.md that explicitly prohibits sharing secrets via Slack/chat going forward", "type": "presence"},
+        {"text": "Recommends Path B (in-place modernization on a branch) as the appropriate execution path, NOT a greenfield rewrite", "type": "presence"},
+        {"text": "Does NOT recommend Tier 3+ infrastructure (k8s, multi-region, dedicated SRE) for this 30-user internal tool", "type": "absence"}
+      ]
+    },
+    {
+      "id": 3,
+      "name": "tier3-vibe-coded-saas-with-pii",
+      "prompt": "ok so I've been building this AI-powered therapy journaling app on the side and it's getting traction — about 200 paying users. it's a flask backend + react frontend, single ec2 box, postgres on the same box, no backups, no monitoring beyond cloudwatch logs that i never look at. users upload journal entries, the app sends them to claude api for analysis and stores both the entry and the analysis in the db. there's a stripe integration. i wrote it all in 2 weeks of vibe coding and i'm getting nervous. i don't even have a privacy policy. help me figure out what i need to do — i want to know everything thats wrong but i also need to keep shipping. /productionize-me",
+      "expected_output": "Should pick Tier 3 (paying customers + sensitive personal data nearing therapy-adjacent territory). Should flag P0s: backups, encryption at rest, real privacy policy, secrets handling, basic auth/authz audit. Should NOT recommend a greenfield rebuild (200 paying users — continuity matters). Should offer to generate retrospective design docs including SECURITY_PRIVACY.md as a current-state-honest snapshot. Should be honest about regulatory adjacency without being alarmist. Should propose a CLAUDE.md that locks in privacy-by-default rules.",
+      "files": [],
+      "assertions": [
+        {"text": "Explicitly identifies and labels the project as Tier 3", "type": "presence"},
+        {"text": "Acknowledges potential regulatory adjacency (HIPAA-adjacent, mental health data sensitivity) without claiming HIPAA compliance is required", "type": "presence"},
+        {"text": "Flags lack of backups as a P0 / M0 item", "type": "presence"},
+        {"text": "Flags lack of encryption at rest as a P0 / M0 item for sensitive journal data", "type": "presence"},
+        {"text": "Flags lack of privacy policy as a P0 / M0 item — required before continued public sale", "type": "presence"},
+        {"text": "Recommends Path B (in-place modernization) — explicitly NOT a greenfield rebuild given 200 paying users", "type": "presence"},
+        {"text": "Generates SUMMARY.md, AUDIT.md, PLAN.md as separate artifacts", "type": "artifact"},
+        {"text": "Generates retrospective SECURITY_PRIVACY.md with honest current-state assessment including known gaps", "type": "artifact"},
+        {"text": "Generates retrospective ARCHITECTURE.md and DATA_MODEL.md with Mermaid diagrams", "type": "artifact"},
+        {"text": "Generates CLAUDE.md with explicit privacy-by-default and no-PII-in-logs rules", "type": "presence"},
+        {"text": "Includes operational readiness items appropriate for Tier 3 (alerting on real signals, runbooks for top failure modes)", "type": "presence"},
+        {"text": "Tone is honest about gaps (per user request 'tell me everything wrong') without being alarmist or paralyzing", "type": "tone"}
+      ]
+    }
+  ]
+}

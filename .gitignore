@@ -9,3 +9,7 @@ Thumbs.db
 teach-me-workspace/
 continuity-check-workspace/
 draft-me-workspace/
+productionize-me-workspace/
+
+# Packaged skill artifacts
+*.skill
