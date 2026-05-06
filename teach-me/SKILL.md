@@ -83,6 +83,12 @@ Your first job is to understand the person and what they want to learn. This isn
    - Do they want fun and silly, or serious and focused? Gamified with streaks and scores, or reflective and journal-based?
 5. **Their goal and timeframe** — "conversational Spanish in 6 months" vs "pass the sommelier exam next year" vs "just explore for fun"
 6. **Their technical comfort level** — can they run commands in a terminal, or should everything be openable in a browser/text editor?
+7. **Assessment rhythm** — how do they want to know they're making progress? Some learners thrive on a single capstone project at the end of a module — something to show off. Others get demotivated by big looming projects and prefer steady, lightweight check-ins (a quick quiz, a mini-challenge, a self-reflection prompt every few lessons). The default is steady check-ins; treat the capstone as opt-in.
+8. **Format depth** — once you have a sense of who they are, ask whether they want the standard format or a co-designed one. Phrase it concretely:
+
+   > "I can go two ways from here. The fast path: I use my standard format — a dashboard, modular HTML lessons, the kinds of tools that fit your topic — and we build. The collaborative path: we spend a bit of time co-designing the format together — how lessons should look, what tools matter most, how navigation should feel — before I build anything. Faster vs. more specifically yours. Which do you want?"
+
+   Their answer here decides whether Phase 2 is a one-paragraph confirmation or a real co-design conversation.
 
 The learning style discovery matters because it determines what you build. Two people learning the same topic should get very different repos if one loves flashcards and competition and the other prefers reading and reflection. Dig into this — don't accept "I'm a visual learner" at face value. Ask what that means to them. Ask about their favorite teacher growing up and why. The answers here drive the entire artifact strategy.
 
@@ -97,7 +103,7 @@ When they say they want serious and structured, that's equally a directive — f
 
 The tone you extract in the interview must show up unmistakably in the actual lesson HTML. If you promised playful and the lessons read like a Wikipedia article, you failed the most important part of the job.
 
-Start with what they've already told you and fill in the gaps naturally. Don't ask all of these as a numbered list — weave them into conversation.
+Start with what they've already told you and fill in the gaps naturally. Don't ask all of these as a numbered list — weave them into conversation. The format-depth question (#8) is the natural closer: it leads directly into Phase 2.
 
 **When you feel you have a solid picture**, pause and summarize back to them:
 
@@ -105,17 +111,69 @@ Start with what they've already told you and fill in the gaps naturally. Don't a
 
 ---
 
-### Phase 2: Designing the Curriculum
+### Phase 2: Format Co-Design
 
-Based on what you learned, design a curriculum with:
+Two paths from here. Pick based on the learner's answer to the format-depth question.
+
+#### Express path
+
+If they want the standard format, just confirm the rough shape in one paragraph:
+
+> "Got it. I'll use the standard format: a dashboard at the root, [N] modules each with HTML lessons and embedded exercises, a [virtual instrument / drawing canvas / etc.] for hands-on practice, and lightweight check-ins between lessons. I'll build a quick mockup before doing the full repo — sound good?"
+
+Then move to Phase 3.
+
+#### Tailored path
+
+If they want something co-designed, treat this as real collaborative brainstorming, not another checklist. Open with concrete proposals — vague questions like "how should it look?" put the work back on them. Lead with options and tradeoffs:
+
+- **Lesson layout** — single long-scroll pages, short paginated lessons (one concept per page), or notebook-style with code blocks alongside narrative. Recommend one for their topic and reason, but show the alternatives.
+- **Navigation style** — dashboard-first (always return home), linear flow (just prev/next, no overview), or mixed.
+- **Tool focus** — what *one* tool would make this curriculum feel magical? Walk through 2–3 candidates and pick together.
+- **Assessment rhythm** — confirm what they said in Phase 1: scattered check-ins, end-of-module capstone, both, or neither.
+- **Tone and voice** — concrete tone choices: a recurring narrator? footnote jokes? a mascot? clinical/efficient? Pick a few examples, not a category.
+- **Visual identity** — minimal/clean, dense/textbook, vibrant/playful, dark/serious. Offer 2–3 reference vibes and let them pick.
+
+Don't run through all six. Pick 2–4 that matter most for this learner's topic and goals. The point is to make decisions together, not to survey them.
+
+When you've got a clear shape, summarize it back in one paragraph and confirm before moving on.
+
+---
+
+### Phase 3: Mockup Preview
+
+Before building the full repo, build one **representative slice** so the learner can see and feel the format. This is the highest-leverage step in the whole flow — better to find out now that they hate the color palette or the lesson density than after you've generated forty files.
+
+Build three small files in a temporary `mockup/` directory:
+
+1. **`mockup/dashboard.html`** — the dashboard styled with the chosen visual identity, populated with the planned module titles and a sample progress bar. No real lesson content yet.
+2. **`mockup/sample-lesson.html`** — one lesson page using the chosen layout, fully styled, with real content for one lesson (not lorem ipsum). Pick the lesson the learner is most likely to be excited about.
+3. **`mockup/sample-tool.html`** — the central interactive tool for the topic (the virtual instrument, drawing canvas, recipe card, fold simulator, etc.), working end-to-end.
+
+All three share the navigation system, color tokens, fonts, and tone you'd use in the full build. Treat them as fully production-quality, just narrow in scope.
+
+Then pause and ask:
+
+> "Take a look — open `mockup/dashboard.html` and click through. Does this feel right? Want to adjust the layout, colors, density, tone, or anything else before I build the rest? It's much cheaper to change it now than after the full build."
+
+Iterate on the mockup until the learner is happy. When they sign off, move to Phase 4.
+
+**On the express path**, you can offer to skip the mockup if the learner wants to move fast — but mention the cost-savings argument first. Most learners benefit from seeing it.
+
+---
+
+### Phase 4: Curriculum Design
+
+Now design the full curriculum. The format decisions are already made (Phases 2–3) — this phase is about content depth, sequence, and what activities go where.
 
 - **Modules** organized in a logical learning progression
 - **Lessons** within each module, each with clear learning objectives
 - **Exercises** appropriate to their learning style
-- **A capstone or milestone** for each module so they can feel progress
+- **Lightweight check-ins** scattered across lessons — quick quizzes, mini-challenges, reflection prompts. The default rhythm is something small every 2–3 lessons so the learner gets steady feedback without anything looming.
+- **Optional capstone** — only if they asked for one in Phase 1, or the topic genuinely calls for an integrative project (a portfolio piece, a recipe they'd actually cook, a song they'd actually play). Don't default to one. For many learners a big end-of-module project is more demotivating than motivating.
 - **Interactive tools** tailored to the core activity of the topic (see next section)
 
-The curriculum should feel achievable, not overwhelming. Err on the side of fewer, meatier modules over a sprawling list. You can always add more later.
+Err on the side of fewer, meatier modules over a sprawling list. You can always add more later.
 
 ---
 
@@ -203,7 +261,7 @@ Magical is the right target — not just functional, not just good. A few things
 
 ---
 
-### Phase 3: Building the Repository
+### Phase 5: Building the Repository
 
 Scaffold a repository that contains everything they need. Structure depends on topic and learner, but here's the skeleton:
 

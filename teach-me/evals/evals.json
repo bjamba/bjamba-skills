@@ -3,83 +3,67 @@
   "evals": [
     {
       "id": 1,
-      "prompt": "teach me how to pair wines with cheeses. I love hosting dinner parties and I always just guess randomly. I have about 2 months before a big party I'm hosting and I want to actually know what I'm doing by then. I'm not super techy — I mostly just use my laptop for email and browsing.",
-      "expected_output": "A scaffolded repo with HTML-based lessons, interactive tools (flashcards, quizzes, pairing reference), a dashboard.html progress tracker, and a curriculum.json. Everything should be openable by double-clicking — no terminal commands. Should include Phase 0 upfront questions (scope/budget/seriousness/platform) and a token cost estimate before building.",
+      "name": "rust-express-with-capstone",
+      "prompt": "teach me Rust. I'm a backend dev with 5 years of Go, comfortable with terminals. Just use your standard format, I trust your defaults. One thing though: I want a real capstone project at the end, something I could actually put on GitHub.",
+      "expected_output": "Express path: cost estimate first, brief Phase 0 + Phase 1 confirmation, single-paragraph format confirmation, then a mockup/ directory with three working files (dashboard, sample-lesson, sample-tool), pausing for review before full build. Final curriculum (if built) should include an opt-in capstone.",
       "files": [],
       "expectations": [
-        "Phase 0 questions are asked before building (scope, budget, seriousness, platform)",
-        "A token/cost estimate is given before the build begins",
-        "A dashboard.html file exists at the repo root with visual progress tracking",
-        "All lesson content is .html files (not .md), with consistent nav headers linking back to dashboard",
-        "At least two different interactive HTML tools (e.g., flashcards AND quiz, or reference card AND matching game)",
-        "A curriculum.json file is created with modules, lessons, and progress tracking",
-        "A credits.html is created if any external sources are referenced",
-        "No technical jargon or terminal commands appear in learner-facing materials",
-        "Budget & timeline section appears in dashboard.html or README.md"
+        "Cost estimate appears as the very first output, before any planning",
+        "Express path is taken — no extensive collaborative format brainstorming",
+        "A mockup/ directory exists with dashboard.html, sample-lesson.html, and sample-tool.html",
+        "All three mockup files are fully styled (real CSS, not placeholder)",
+        "sample-tool.html contains a working interactive code editor (CodeMirror or styled textarea) for Rust",
+        "The agent pauses for mockup feedback before generating the full module repo",
+        "Curriculum plan or repo includes a capstone project (since the user asked for one)",
+        "Lightweight check-ins (quizzes / mini-challenges / reflection) appear in the plan, not just modules + capstone"
       ]
     },
     {
       "id": 2,
-      "prompt": "I'm a junior data scientist (about 1 year of experience with Python and pandas) and I want to get better at machine learning. specifically I want to understand how to build and evaluate classification models. I've got maybe 3-4 months and I can dedicate about an hour a day. teach me",
-      "expected_output": "A repo with Jupyter notebook lessons (not raw .py files), interactive HTML tools for concept review, a dashboard.html progress tracker, and a curriculum.json. Should include fun/engaging elements alongside the technical content, plus Phase 0 upfront options and a cost estimate.",
+      "name": "watercolor-tailored-no-capstone",
+      "prompt": "teach me watercolor. I want to co-design this with you — I have opinions. No streaks, no gamification, no big final project (I get demotivated by looming things). I want long-form lesson pages, not paginated. Visual style should feel like a quiet sketchbook, not a video game.",
+      "expected_output": "Tailored path: cost estimate first, brief Phase 0/1, then collaborative brainstorming on a few format axes (lesson layout, tool, tone, visual identity) with concrete proposals — not vague questions. Mockup reflects the no-gamification, long-form, sketchbook-aesthetic preferences. No capstone. Subtle check-ins (reflection prompts, not quizzes with scores).",
       "files": [],
       "expectations": [
-        "Phase 0 questions are asked before building (scope, budget, seriousness, platform)",
-        "A token/cost estimate is given before the build begins",
-        "A dashboard.html file exists at the repo root with visual progress tracking",
-        "Lessons use Jupyter notebooks (.ipynb) rather than raw .py files for narrative content",
-        "At least one interactive HTML tool (quiz, flashcards, or cheat sheet)",
-        "A curriculum.json file is created with a progression from basic to advanced classification",
-        "The curriculum includes variety beyond just notebooks — some interactive review, reference tools, or fun elements",
-        "Model evaluation concepts (confusion matrix, precision/recall, cross-validation) are covered",
-        "Budget & timeline section appears in dashboard.html or README.md"
+        "Cost estimate appears as the very first output",
+        "Tailored path is taken — agent opens collaborative brainstorming, not a one-paragraph confirmation",
+        "Brainstorming offers concrete proposals with tradeoffs (e.g., 'I'd lean toward X because Y, alternatives are Z'), not open-ended 'how would you like it?'",
+        "A mockup/ directory exists with dashboard.html, sample-lesson.html, and sample-tool.html",
+        "Lessons in the mockup are long-form / single-scroll, not paginated",
+        "Visual identity is muted/sketchbook (warm neutrals, paper-like backgrounds, hand-drawn feel) — not vibrant or game-like",
+        "No streaks, scores, badges, or progress points anywhere in the mockup or curriculum",
+        "No capstone project in the curriculum plan",
+        "Check-ins are subtle — reflection prompts or self-assessments, not graded quizzes"
       ]
     },
     {
       "id": 3,
-      "prompt": "I want to learn how to play piano. I'm a complete beginner — I've never played any instrument before. I want to be able to play simple songs within a few months. I mostly have a keyboard at home and about 20 minutes a day.",
-      "expected_output": "A repo with a virtual keyboard tool built with Tone.js that plays notes on click or keyboard press, ear training exercises, music theory lessons as HTML, and a dashboard. The virtual instrument should be on the same page as exercises that use it — not a separate tool.",
+      "name": "photography-vague-needs-probing",
+      "prompt": "teach me photography. I'm a complete beginner.",
+      "expected_output": "Cost estimate first, then Phase 0 questions woven in, then Phase 1 interview that explicitly surfaces the format-depth branching question (express vs. tailored). Should not silently pick a path.",
       "files": [],
       "expectations": [
-        "Phase 0 questions are asked before building (scope, budget, seriousness, platform)",
-        "A virtual keyboard or instrument is built using Tone.js (or similar audio library)",
-        "The virtual instrument is playable by clicking or pressing keyboard keys",
-        "Exercises that require hearing/playing notes have the instrument on the same page — not just linked to a separate tool",
-        "Ear training exercises exist that play notes/intervals and ask the learner to identify them",
-        "A dashboard.html exists with progress tracking",
-        "A curriculum.json is created",
-        "The skill acknowledges the virtual/physical gap (virtual keyboard can't replace tactile practice)"
+        "Cost estimate appears as the very first output",
+        "Phase 0 questions (scope, budget, seriousness, platform) are surfaced",
+        "Phase 1 interview asks about how the learner likes to learn (style, tone, motivation)",
+        "The format-depth question is explicitly asked — express vs. tailored — not silently assumed",
+        "The assessment-rhythm question is asked — capstone vs. steady check-ins",
+        "Agent does not build any files before getting answers to Phase 0 / Phase 1"
       ]
     },
     {
       "id": 4,
-      "prompt": "teach me origami. I want to learn how to fold a crane, a frog, and a few other things. I'm a complete beginner.",
-      "expected_output": "A repo with a step-by-step animated folding tutorial — each step should animate the fold using CSS/SVG/Anime.js, not just show a static diagram. The experience should feel like actually folding paper.",
+      "name": "mockup-iteration-feedback",
+      "prompt": "[Mid-flow context: We're already past Phase 0, 1, and 2. The user chose the tailored path for learning embedded systems / Arduino. You already built the following mockup files in mockup/:\n- mockup/dashboard.html — a dashboard with module list and progress bars\n- mockup/sample-lesson.html — a long lesson page with dense paragraphs of theory\n- mockup/sample-tool.html — a circuit simulator widget\n\nThe user has now opened the mockup and replies:]\n\nLove the dashboard, but the lesson page feels way too dense — can you make it more breathable and add a recurring narrator character? Maybe like a friendly engineer who pops in with side comments.",
+      "expected_output": "The agent should iterate on the mockup files specifically — editing mockup/sample-lesson.html (and possibly the others for consistency) to add a recurring narrator and reduce density. It should NOT begin building the full module repo. After editing, it should re-prompt for feedback or confirmation.",
       "files": [],
       "expectations": [
-        "At least one step-by-step fold tutorial exists with animated fold steps (not just static images)",
-        "Animation uses Anime.js, GSAP, or CSS transitions to show the fold motion",
-        "Each step has a 'next' button and shows the current state of the paper",
-        "Navigation between pages uses consistent nav headers with relative links back to dashboard",
-        "dashboard.html exists with progress tracking",
-        "credits.html exists if any reference images or diagrams are used",
-        "Budget & timeline section appears in dashboard.html or README.md"
-      ]
-    },
-    {
-      "id": 5,
-      "prompt": "this is kind of different but... teach me how to be a better listener. I've been getting feedback at work that I interrupt people and jump to solutions too fast, and my partner has said similar things. I don't really know where to start with something like this. it's not like there's a textbook for it.",
-      "expected_output": "A repo with HTML-based lessons (not flat .md or .txt), interactive self-reflection tools, a dashboard.html progress tracker, and a curriculum.json. Should feel warm and engaging, not like reading a textbook.",
-      "files": [],
-      "expectations": [
-        "Phase 0 questions are asked before building (scope, budget, seriousness, platform)",
-        "A dashboard.html file exists at the repo root with visual progress tracking",
-        "Lessons are primarily .html files with consistent nav headers linking back to dashboard",
-        "At least one interactive HTML tool for self-reflection or practice (e.g., conversation replay, listening journal, self-check)",
-        "A curriculum.json file is created with modules progressing from awareness to practice",
-        "Exercises include real-world conversation scenarios, not abstract theory",
-        "Tone is warm and non-judgmental throughout — no clinical or lecture-like language",
-        "Budget & timeline section appears in dashboard.html or README.md"
+        "Agent edits files inside mockup/ rather than creating new module-* directories",
+        "mockup/sample-lesson.html is modified — density reduced (more whitespace, shorter paragraphs, visual breathing room)",
+        "A recurring narrator character is added — appears at least twice in the lesson with side comments / asides",
+        "The narrator has a consistent visual treatment (an avatar, a callout box, a distinct style) — not just italics",
+        "Agent does NOT build the full repo (no module-01, module-02 directories with real lessons)",
+        "Agent asks for further feedback or confirms the iteration is good before moving on"
       ]
     }
   ]
