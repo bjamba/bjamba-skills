@@ -144,6 +144,48 @@ The skill also activates automatically when you open a conversation inside a cod
 - **`CLAUDE.md`** — durable, enforceable guardrails. Every rule is paired with a hook, CI check, or `scripts/check.sh` step that catches violations
 - **`scripts/check.sh`** — runnable repo-specific validator (Tier 2+) that enforces architectural invariants, security rules, and data-handling constraints
 
+### pitch-me
+
+A research-backed startup-pitch generator tuned to the **solo, AI-leveraged, near-zero-cost, near-passive** founder profile. Give it a prompt — broad ("ten startup ideas") or narrow ("five legal-tech ideas with a $5K/mo floor") — and it generates candidate ideas, does live web research on each, then puts them through a 5-persona devil's-advocate panel. You get back only the pitches that earned a strong score, each with a deck, a one-pager, a scorecard, and a red-team objections doc.
+
+**What it does:**
+
+1. **Frames the brief** — fixes scope, revenue floor, founder constraints, exclusions, and pass threshold (defaults: solo + day-job, $0 budget, ≤10 hr/week, no hires, no physical product, $1K/mo floor, avg ≥8/10 with no persona <6)
+2. **Generates a candidate pool** — 2× the requested N, biased toward boring buyers, AI-as-delivery (not AI-as-marketing), distribution paths a solo founder can actually walk
+3. **Researches each survivor live** — TAM/SAM/SOM with citations, real customer quotes from Reddit/HN/IndieHackers/G2, competitor pricing, distribution evidence, regulatory/platform/model risk, unit-economics math
+4. **Stress-tests with a 5-persona panel** — Indie-Hacker Operator, Pattern-Matching Seed VC, Unit-Economics Hawk, Distribution Skeptic, Contrarian Devil's Advocate. Each scores, names the strongest objection, and proposes one +1 change
+5. **Iterates** — applies +1 changes for near-misses; kills ideas that fail outright; keeps generating from the pool until N pitches pass or the 5-hour wall-clock budget is hit
+6. **Produces deliverables** — HTML deck, Markdown one-pager, scorecard, red-team doc, plus a top-level index sorted strongest-first
+
+**Usage:**
+
+```
+/pitch-me
+```
+
+Or naturally:
+
+```
+pitch me 5 startups in legal-tech I could build solo on nights and weekends
+```
+
+```
+give me 10 micro-SaaS ideas where AI does most of the work
+```
+
+```
+what could a solo founder with $0 and a day job actually ship and monetize?
+```
+
+**What it produces:**
+
+- **`./pitches/_index.md`** — all pitches sorted by score with one-line theses, plus the kill list of what didn't make it and why
+- **`./pitches/<slug>/deck.html`** — self-contained HTML pitch deck with arrow-key nav, no external assets
+- **`./pitches/<slug>/one-pager.md`** — exec doc that stands alone (buyer, product, wedge, market, pricing, distribution, roadmap, risks)
+- **`./pitches/<slug>/scorecard.md`** — 5-persona scores with iteration history
+- **`./pitches/<slug>/red-team.md`** — top objections with answers, plus the "what would make this idea wrong" stress-test
+- **`./pitches/<slug>/research.md`** — full research note with link-cited TAM, competitors, customer evidence, unit economics
+
 ## Installation
 
 Claude Code discovers skills one level deep in `~/.claude/skills/`. Since this repo contains multiple skills in subdirectories, you clone it once and then symlink each skill into the right place.
@@ -159,6 +201,7 @@ ln -sf ~/.claude/skills/bjamba-skills/teach-me ~/.claude/skills/teach-me
 ln -sf ~/.claude/skills/bjamba-skills/continuity-check ~/.claude/skills/continuity-check
 ln -sf ~/.claude/skills/bjamba-skills/draft-me ~/.claude/skills/draft-me
 ln -sf ~/.claude/skills/bjamba-skills/productionize-me ~/.claude/skills/productionize-me
+ln -sf ~/.claude/skills/bjamba-skills/pitch-me ~/.claude/skills/pitch-me
 ```
 
 Restart your Claude Code session. Skills will be available by their slash command (e.g. `/teach-me`, `/draft-me`, `/continuity-check`) or will activate automatically based on context.
@@ -188,6 +231,7 @@ ln -sf .claude/skills/bjamba-skills/teach-me .claude/skills/teach-me
 ln -sf .claude/skills/bjamba-skills/continuity-check .claude/skills/continuity-check
 ln -sf .claude/skills/bjamba-skills/draft-me .claude/skills/draft-me
 ln -sf .claude/skills/bjamba-skills/productionize-me .claude/skills/productionize-me
+ln -sf .claude/skills/bjamba-skills/pitch-me .claude/skills/pitch-me
 ```
 
 ## Structure
@@ -210,10 +254,14 @@ bjamba-skills/
 │   ├── scripts/
 │   ├── references/
 │   └── evals/
-└── productionize-me/
+├── productionize-me/
+│   ├── SKILL.md
+│   ├── references/
+│   └── evals/
+└── pitch-me/
     ├── SKILL.md
     ├── references/
-    └── evals/
+    └── assets/
 ```
 
 ## Tested skills
