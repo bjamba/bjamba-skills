@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Pitch Season {{SEASON_LABEL}} — {{RUN_TITLE}}</title>
+<style>
+  :root {
+    --bg: #08090c;
+    --bg-elev: #12141a;
+    --bg-card: #161922;
+    --fg: #e8edf2;
+    --muted: #8a96a3;
+    --rule: #232833;
+    --accent: #ffb84a;
+    --invest: #4ade80;
+    --interested: #60a5fa;
+    --softpass: #fbbf24;
+    --pass: #f87171;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin:0; padding:0; background: var(--bg); color: var(--fg); font-family: -apple-system, BlinkMacSystemFont, "Inter", system-ui, sans-serif; line-height: 1.55; }
+  .wrap { max-width: 1280px; margin: 0 auto; padding: 4vh 5vw 8vh; }
+  header.season-hero {
+    border-bottom: 1px solid var(--rule); padding-bottom: 2em; margin-bottom: 2.5em;
+  }
+  header.season-hero .label { color: var(--accent); font-size: .8rem; text-transform: uppercase; letter-spacing: .2em; }
+  header.season-hero h1 { font-size: clamp(2rem, 4vw, 3rem); margin: .3em 0 .2em; letter-spacing: -0.02em; }
+  header.season-hero .sub { color: var(--muted); font-size: 1.1rem; }
+  header.season-hero .meta {
+    display: flex; gap: .6em; flex-wrap: wrap; margin-top: 1.2em;
+  }
+  .pill {
+    display: inline-block; padding: .3em .8em; border-radius: 999px;
+    border: 1px solid var(--rule); background: var(--bg-elev); color: var(--muted); font-size: .85rem;
+  }
+  .pill.mode { color: var(--accent); border-color: var(--accent); }
+
+  .filters {
+    display: flex; gap: .6em; flex-wrap: wrap; margin: 0 0 2em;
+  }
+  .filter-btn {
+    background: var(--bg-elev); color: var(--fg); border: 1px solid var(--rule); border-radius: 8px;
+    padding: .4em .9em; font-size: .85rem; cursor: pointer;
+  }
+  .filter-btn.active { background: var(--accent); color: #1a1500; border-color: var(--accent); }
+
+  .episodes {
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(310px, 1fr));
+    gap: 1.5em;
+  }
+  .episode {
+    background: var(--bg-card); border: 1px solid var(--rule); border-radius: 14px;
+    overflow: hidden; cursor: pointer; transition: transform .12s, border-color .12s;
+    display: flex; flex-direction: column;
+  }
+  .episode:hover { transform: translateY(-2px); border-color: var(--accent); }
+  .episode .thumb {
+    background: linear-gradient(135deg, #1a1d28 0%, #0a0c12 100%);
+    padding: 1.6em 1.4em 1.2em; position: relative;
+    border-bottom: 1px solid var(--rule);
+  }
+  .episode .thumb .ep-label { color: var(--muted); font-size: .72rem; text-transform: uppercase; letter-spacing: .15em; }
+  .episode .thumb h3 { margin: .3em 0 .4em; font-size: 1.25rem; letter-spacing: -0.01em; }
+  .episode .thumb .one-line { color: var(--muted); font-size: .85rem; line-height: 1.45; min-height: 2.6em; }
+  .episode .body { padding: 1em 1.4em 1.2em; }
+  .episode .scoreline {
+    display: flex; gap: .8em; align-items: baseline; margin-bottom: .8em;
+  }
+  .episode .scoreline .score { font-size: 1.6rem; font-weight: 700; color: var(--accent); }
+  .episode .scoreline .label { font-size: .72rem; color: var(--muted); text-transform: uppercase; letter-spacing: .1em; }
+  .episode .decisions {
+    display: flex; gap: .35em; margin-bottom: .9em;
+  }
+  .deci {
+    flex: 1; text-align: center; padding: .25em 0; border-radius: 4px;
+    font-size: .68rem; font-weight: 700; letter-spacing: .07em; text-transform: uppercase;
+  }
+  .deci.invest { background: rgba(74,222,128,.16); color: var(--invest); }
+  .deci.interested { background: rgba(96,165,250,.16); color: var(--interested); }
+  .deci.softpass { background: rgba(251,191,36,.16); color: var(--softpass); }
+  .deci.pass { background: rgba(248,113,113,.18); color: var(--pass); }
+  .episode .tags { display: flex; gap: .4em; flex-wrap: wrap; }
+  .tag {
+    padding: .2em .55em; border-radius: 4px; font-size: .7rem; font-weight: 600;
+    text-transform: uppercase; letter-spacing: .05em;
+    background: var(--bg-elev); color: var(--muted); border: 1px solid var(--rule);
+  }
+  .tag.style-bold { color: #c084fc; border-color: #c084fc; }
+  .tag.style-niche { color: #60a5fa; border-color: #60a5fa; }
+  .tag.style-laser { color: #f59e0b; border-color: #f59e0b; }
+  .tag.style-solid { color: #4ade80; border-color: #4ade80; }
+  .episode .links { font-size: .8rem; color: var(--muted); margin-top: .9em; }
+  .episode .links a { color: var(--accent); text-decoration: none; }
+  .episode .links a:hover { text-decoration: underline; }
+
+  .showrunner {
+    background: var(--bg-elev); border: 1px solid var(--rule); border-radius: 14px;
+    padding: 1.8em 2em; margin: 3em 0 1em;
+  }
+  .showrunner h2 { color: var(--accent); margin: 0 0 .6em; font-size: 1.3rem; }
+  .showrunner ul { padding-left: 1.4em; }
+  .showrunner li { margin: .4em 0; }
+
+  footer.run-footer {
+    margin-top: 4em; padding-top: 2em; border-top: 1px solid var(--rule);
+    color: var(--muted); font-size: .82rem; line-height: 1.7;
+  }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+
+  <header class="season-hero">
+    <div class="label">Pitch Season {{SEASON_LABEL}}</div>
+    <h1>{{RUN_TITLE}}</h1>
+    <div class="sub">{{RUN_SUBTITLE}}</div>
+    <div class="meta">
+      <span class="pill mode">Mode: {{COMMITMENT_MODE}}</span>
+      <span class="pill">Style mix: {{STYLE_MIX}}</span>
+      <span class="pill">{{N_EPISODES}} episodes</span>
+      <span class="pill">{{N_INVEST}} invest · {{N_INTERESTED}} interested · {{N_SOFTPASS}} soft-pass · {{N_PASS}} pass</span>
+    </div>
+  </header>
+
+  <div class="filters">
+    <button class="filter-btn active" data-filter="all">All episodes</button>
+    <button class="filter-btn" data-filter="bold">Bold / novel</button>
+    <button class="filter-btn" data-filter="niche">Niche</button>
+    <button class="filter-btn" data-filter="laser">Laser-focused</button>
+    <button class="filter-btn" data-filter="solid">Solid / documented</button>
+    <button class="filter-btn" data-filter="invest">Invest decisions</button>
+    <button class="filter-btn" data-filter="pass">Pass decisions</button>
+  </div>
+
+  <div class="episodes" id="episodes">
+    {{EPISODE_CARDS}}
+    <!--
+      Each card is:
+      <div class="episode" data-style="solid" data-decision-mix="invest interested softpass" onclick="window.location.href='./{{slug}}/pitch-meeting/visual-novel.html'">
+        <div class="thumb">
+          <div class="ep-label">Episode {{N}} of {{TOTAL}}</div>
+          <h3>{{name}}</h3>
+          <div class="one-line">{{thesis}}</div>
+        </div>
+        <div class="body">
+          <div class="scoreline">
+            <div class="score">{{X.X}}</div>
+            <div class="label">Composite (in {{mode}} mode)</div>
+          </div>
+          <div class="decisions">
+            <span class="deci invest">{{N}}I</span>
+            <span class="deci interested">{{N}}?</span>
+            <span class="deci softpass">{{N}}–</span>
+            <span class="deci pass">{{N}}×</span>
+          </div>
+          <div class="tags">
+            <span class="tag style-{{style}}">{{style}}</span>
+            <span class="tag">{{pattern}}</span>
+            <span class="tag">{{founder_decision}}</span>
+          </div>
+          <div class="links">
+            ▶ Watch episode · <a href="./{{slug}}/one-pager.md">One-pager</a> · <a href="./{{slug}}/handoff/hacky-hours.md">Handoff</a>
+          </div>
+        </div>
+      </div>
+    -->
+  </div>
+
+  <div class="showrunner">
+    <h2>Showrunner's notes</h2>
+    <p>{{POST_MORTEM_INTRO}}</p>
+    <ul>
+      {{POST_MORTEM_BULLETS}}
+    </ul>
+    <p>Read the full <a style="color:var(--accent)" href="./_post-mortem.md">post-mortem</a> for the season.</p>
+  </div>
+
+  <footer class="run-footer">
+    Generated by the <code>pitch-me</code> skill · {{DATE}}<br>
+    Investor avatars are composites of real, verified people; all dialogue is simulated.<br>
+    Audio plays via Web Speech API in each episode page. For studio-quality audio, see <a style="color:var(--accent)" href="./audio-rendering.md">audio-rendering.md</a>.
+  </footer>
+
+</div>
+
+<script>
+  const buttons = document.querySelectorAll('.filter-btn');
+  const cards = document.querySelectorAll('.episode');
+  buttons.forEach(b => b.addEventListener('click', () => {
+    buttons.forEach(x => x.classList.remove('active'));
+    b.classList.add('active');
+    const f = b.dataset.filter;
+    cards.forEach(c => {
+      if (f === 'all') {
+        c.style.display = '';
+      } else if (f === 'invest' || f === 'pass') {
+        const mix = c.dataset.decisionMix || '';
+        c.style.display = mix.includes(f) ? '' : 'none';
+      } else {
+        c.style.display = (c.dataset.style === f) ? '' : 'none';
+      }
+    });
+  }));
+</script>
+</body>
+</html>

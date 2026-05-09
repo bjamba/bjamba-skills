@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Investor Panel — Radar Profile</title>
+<style>
+  :root {
+    --bg: #08090c;
+    --bg-elev: #12141a;
+    --fg: #e8edf2;
+    --muted: #8a96a3;
+    --rule: #232833;
+    --accent: #ffb84a;
+  }
+  * { box-sizing: border-box; }
+  body { margin:0; background: var(--bg); color: var(--fg); font-family: -apple-system, BlinkMacSystemFont, "Inter", system-ui, sans-serif; }
+  .wrap { max-width: 1100px; margin: 0 auto; padding: 4vh 5vw 8vh; }
+  h1 { font-size: clamp(1.6rem, 3vw, 2.4rem); margin: 0 0 .3em; }
+  .sub { color: var(--muted); margin-bottom: 2em; }
+  .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5em; }
+  @media (max-width: 760px) { .grid { grid-template-columns: 1fr; } }
+  .card {
+    background: var(--bg-elev); border: 1px solid var(--rule); border-radius: 14px;
+    padding: 1.5em;
+  }
+  .card h3 { margin: 0 0 .15em; font-size: 1.2rem; }
+  .card .composite { color: var(--muted); font-size: .82rem; margin-bottom: 1em; }
+  .card svg { width: 100%; height: auto; }
+  .axis-label { fill: var(--muted); font-size: 11px; }
+  .grid-line { stroke: var(--rule); fill: none; }
+  .data-poly { fill-opacity: 0.25; stroke-width: 2; }
+  .legend {
+    display: flex; gap: 1.5em; flex-wrap: wrap; margin-top: 1.2em;
+    color: var(--muted); font-size: .82rem;
+  }
+  .legend .axis-name { color: var(--fg); }
+  .panel-overview {
+    background: var(--bg-elev); border: 1px solid var(--rule); border-radius: 14px;
+    padding: 1.5em; margin-bottom: 2em;
+  }
+  .panel-overview svg { width: 100%; max-width: 600px; display: block; margin: 1em auto; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Investor Panel — Radar Profile</h1>
+  <div class="sub">{{RUN_LABEL}} — {{COMMITMENT_MODE}} mode</div>
+
+  <div class="panel-overview">
+    <h3 style="margin-top:0">All five fixed investors, overlaid</h3>
+    <p style="color:var(--muted);font-size:.9rem">
+      Six axes per investor: <span class="axis-name">Risk</span>, <span class="axis-name">Time horizon</span>, <span class="axis-name">Scale</span>, <span class="axis-name">Capital</span>, <span class="axis-name">Numbers vs narrative</span>, <span class="axis-name">Optimism</span>. Each scored 1–10. Overlapping shapes = aligned investors. Disagreement = signal.
+    </p>
+    <svg viewBox="0 0 600 600" id="overlay-svg">
+      {{OVERLAY_RADAR}}
+      <!--
+        Renderer should produce a radar chart:
+        - Six axes spaced 60° apart, labeled.
+        - Concentric grid rings at 2/4/6/8/10.
+        - One <polygon> per investor with class="data-poly investor-{slug}" and a distinct color.
+      -->
+    </svg>
+    <div class="legend">
+      <div><span style="display:inline-block;width:12px;height:12px;background:#f59e0b;border-radius:3px;margin-right:.4em;vertical-align:middle"></span>Bootstrapper</div>
+      <div><span style="display:inline-block;width:12px;height:12px;background:#06b6d4;border-radius:3px;margin-right:.4em;vertical-align:middle"></span>Operator</div>
+      <div><span style="display:inline-block;width:12px;height:12px;background:#8b5cf6;border-radius:3px;margin-right:.4em;vertical-align:middle"></span>Seed VC</div>
+      <div><span style="display:inline-block;width:12px;height:12px;background:#ec4899;border-radius:3px;margin-right:.4em;vertical-align:middle"></span>Growth VC</div>
+      <div><span style="display:inline-block;width:12px;height:12px;background:#475569;border-radius:3px;margin-right:.4em;vertical-align:middle"></span>Skeptic</div>
+    </div>
+  </div>
+
+  <div class="grid">
+    {{INDIVIDUAL_RADARS}}
+    <!--
+      One card per investor + Domain Expert + Customer:
+      <div class="card">
+        <h3>Bootstrapper</h3>
+        <div class="composite">Composite of: Pieter Levels, Marc Lou, Daniel Vassallo, Tony Dinh, Sahil Lavingia, Jon Yongfook</div>
+        <svg viewBox="0 0 320 320">{{INDIVIDUAL_RADAR_SVG}}</svg>
+      </div>
+    -->
+  </div>
+</div>
+</body>
+</html>

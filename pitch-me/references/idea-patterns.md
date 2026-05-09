@@ -4,6 +4,31 @@ This is a catalog of patterns that have actually produced revenue for solo found
 
 When you generate a candidate, try to articulate which pattern (or hybrid of patterns) it instantiates. If you can't, the idea may be too vague.
 
+## Mapping patterns to commitment modes
+
+Each pattern has a "natural mode" where it shines, and modes where it tends to break:
+
+| Pattern | Best modes | Worst modes |
+|---|---|---|
+| A — Vertical AI workflow tool | Part-time solo, Full-time solo | Passive-income (often needs sales motion); Unicorn (TAM cap) |
+| B — Productized service with AI as labor | Part-time solo, Full-time solo, Part-time team | Passive-income (review touch); Unicorn (doesn't scale infinite) |
+| C — Integration glue | Passive-income, Part-time solo | Unicorn (platform-dependent ceiling) |
+| D — Curated AI-generated data product | Passive-income, Part-time solo | Unicorn (TAM cap) |
+| E — Niche-trained content site / freemium tool | Passive-income (slow burn), Part-time solo | Higher modes need faster ramp |
+| F — AI-augmented expert / agent-on-call | Full-time solo, Part-time team | Passive-income (escalations break it) |
+| G — Internal-tool-as-a-product | Most modes; depends on the tool | Unicorn unless the tool addresses a $1B+ category |
+
+Use these as a sanity-check during candidate generation. If a candidate is Pattern F (escalations) being pitched in passive-income mode, that's mode-mismatched — call it out and let the meeting evaluate accordingly. Don't reject it; just be clear-eyed.
+
+## Pattern × Pitch-style mix
+
+For the pitch-style mix in `references/pitch-style-mix.md`:
+
+- **Bold** candidates often combine 2 patterns (e.g., F + D = "AI-on-call layered on a curated data product"). Useful for exploring what's possible at the frontier.
+- **Niche** candidates usually instantiate a single pattern in a deep vertical (e.g., A in legaltech, A in dental ops, A in funeral home).
+- **Laser** candidates almost always instantiate a single pattern with the smallest possible v1 (e.g., E or D narrowed to one specific use).
+- **Solid** candidates instantiate Patterns A, B, or C with a documented buyer and an empty wedge — these are where most of the user's actually-buildable hits will come from.
+
 ---
 
 ## Pattern A — Vertical AI workflow tool

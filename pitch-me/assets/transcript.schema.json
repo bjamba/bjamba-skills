@@ -1,0 +1,93 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Pitch Meeting Transcript",
+  "description": "Structured turns for one simulated pitch meeting. Consumed by visual-novel-template.html for replay and by audio-rendering scripts.",
+  "type": "object",
+  "required": ["pitch_slug", "pitch_name", "commitment_mode", "panel", "turns"],
+  "properties": {
+    "pitch_slug": { "type": "string" },
+    "pitch_name": { "type": "string" },
+    "commitment_mode": {
+      "type": "string",
+      "enum": ["passive-income", "part-time-solo", "full-time-solo", "part-time-team", "full-time-team", "part-time-business", "full-time-business", "unicorn"]
+    },
+    "pitch_style": { "type": "string", "enum": ["bold", "niche", "laser", "solid"] },
+    "date": { "type": "string", "format": "date" },
+    "panel": {
+      "type": "array",
+      "description": "Stable speaker tags in canonical order.",
+      "items": { "type": "string" },
+      "default": ["BOOTSTRAPPER", "OPERATOR", "SEED_VC", "GROWTH_VC", "SKEPTIC", "DOMAIN_EXPERT", "CUSTOMER", "FOUNDER"]
+    },
+    "panel_metadata": {
+      "type": "object",
+      "description": "Per-speaker display metadata for the visual novel and audio renderer.",
+      "additionalProperties": {
+        "type": "object",
+        "properties": {
+          "display_name": { "type": "string" },
+          "composite_of": { "type": "string", "description": "Comma-separated real names the avatar composites." },
+          "color": { "type": "string", "description": "CSS color for the speech-bubble accent." },
+          "voice_hint": { "type": "string", "description": "TTS voice suggestion (e.g. 'female-mid-pitch', 'male-deep'). Mapped to actual voices by the renderer." },
+          "openai_voice": { "type": "string", "enum": ["alloy", "echo", "fable", "nova", "onyx", "shimmer"] },
+          "elevenlabs_voice_id": { "type": "string" }
+        }
+      }
+    },
+    "pre_pitch": {
+      "type": "object",
+      "description": "Pre-pitch perception scores per speaker. 1–10 each.",
+      "additionalProperties": {
+        "type": "object",
+        "properties": {
+          "idea": { "type": "number" },
+          "viability": { "type": "number" },
+          "profitability": { "type": "number" },
+          "gut_reaction": { "type": "string" }
+        }
+      }
+    },
+    "post_pitch": {
+      "type": "object",
+      "description": "Post-pitch perception scores per speaker.",
+      "additionalProperties": {
+        "type": "object",
+        "properties": {
+          "idea": { "type": "number" },
+          "viability": { "type": "number" },
+          "profitability": { "type": "number" }
+        }
+      }
+    },
+    "decisions": {
+      "type": "object",
+      "description": "Per-investor closing decision and scores.",
+      "additionalProperties": {
+        "type": "object",
+        "properties": {
+          "decision": { "type": "string", "enum": ["INVEST", "INTERESTED", "SOFT-PASS", "PASS"] },
+          "best_fit_mode": { "type": "string" },
+          "chosen_mode_score": { "type": "number" },
+          "soundness_score": { "type": "number" }
+        }
+      }
+    },
+    "turns": {
+      "type": "array",
+      "description": "Sequenced dialogue turns. Order matters.",
+      "items": {
+        "type": "object",
+        "required": ["speaker", "kind", "text"],
+        "properties": {
+          "speaker": { "type": "string", "description": "Stable speaker tag (UPPERCASE) or 'stage' for direction." },
+          "kind": {
+            "type": "string",
+            "enum": ["narrative", "question", "answer", "remark", "closing", "direction", "section_header"]
+          },
+          "text": { "type": "string" },
+          "section": { "type": "string", "description": "Optional section label (e.g., 'Q&A', 'Closing remarks')." }
+        }
+      }
+    }
+  }
+}

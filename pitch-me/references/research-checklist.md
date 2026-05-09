@@ -1,8 +1,10 @@
 # Per-Candidate Research Checklist
 
-Each surviving candidate gets one research pass before it's allowed in front of the persona panel. Use WebSearch and WebFetch against real sources. Spawn an Explore subagent if available — research benefits from parallelism.
+Each of the N candidates gets one research pass before it goes into the simulated pitch meeting. Use WebSearch and WebFetch against real sources. Spawn an Explore subagent if available — research benefits from parallelism.
 
-The output of this phase is a structured research note that the personas will read alongside the one-pager.
+The output of this phase is a structured research note (`./pitches/<slug>/research.md`) that the panel reads alongside the one-pager during the meeting.
+
+In v2 of the skill, **every candidate gets full research and a full meeting regardless of how the research lands**. If research surfaces a fatal flaw, *that flaw becomes part of the pitch's deliverables* — the panel will critique it accordingly and the user will read it as a documented learning artifact. Do not soften research findings to make a candidate look more passable.
 
 ## Source quality bar
 
@@ -55,9 +57,10 @@ Produce this exact structure for each candidate, saved to `./pitches/<slug>/rese
 - If applicable, what the founder must do *first* to be welcome in this channel (build credibility, ship a free tool, write a specific post).
 
 ### 6. Regulatory / platform / model risk
-- Any compliance risk (GDPR, HIPAA, FCRA, FTC ad rules, etc.) — even if low.
-- Platform risk if the product depends on another platform (App Store, OpenAI, Shopify, Stripe).
+- Any compliance risk (GDPR, HIPAA, FCRA, FTC ad rules, COPPA, state-level licensing) — even if low.
+- Platform risk if the product depends on another platform (App Store, OpenAI, Shopify, Stripe, Foundry, Etsy, Webflow).
 - Model risk: what happens if AI provider pricing 5x's, capabilities improve, or the provider ships a competing native feature.
+- **Founder licensing**: does the pitch require credentials the founder doesn't have? Tools FOR licensed pros are fine; BEING the licensed pro is not.
 
 ### 7. Unit economics sketch
 - AI / inference cost per active customer per month. Show the math (tokens, calls, model tier).
@@ -70,32 +73,41 @@ Produce this exact structure for each candidate, saved to `./pitches/<slug>/rese
 - What changed in the last 18 months (AI capability, cost curve, regulatory shift, behavior change post-pandemic, platform availability) that makes this newly tractable.
 - If the only "why now" is "AI got better generically," that's weak — push for something specific.
 
-### 9. Open questions
-- Things the research couldn't resolve. The personas will see these and weight them.
+### 9. Commitment-mode fit (NEW)
+- Does the realistic effort profile (build hours, ongoing ops, sales motion, support load) match the chosen commitment mode?
+- Specifically:
+  - For passive-income mode: is the v1 truly buildable in ≤80 hours and operable in ≤2 hr/wk at scale, or is that wishful thinking?
+  - For higher modes: does the founder profile match what the mode demands (full-time time, hiring willingness, fundraising plan)?
+- If the realistic effort exceeds the chosen mode, **say so explicitly**. The panel will then evaluate "best-fit commitment mode" alongside the chosen mode.
+
+### 10. Open questions
+- Things the research couldn't resolve. The panel will see these and weight them.
 - Don't hide unknowns. Surface them — it earns trust and lets the panel evaluate honestly.
 
 ## Research subagent prompt template
 
 When spawning an Explore subagent for research, give it this prompt (adapt the candidate paragraph):
 
-> Research this startup candidate and produce a structured note covering market sizing, buyer profile, competitors, pricing, distribution, regulatory/platform/model risk, unit economics, why-now, and open questions.
+> Research this startup candidate and produce a structured note covering market sizing, buyer profile, competitors, pricing, distribution, regulatory/platform/model risk, unit economics, why-now, commitment-mode fit, and open questions.
 >
 > Candidate: {one-paragraph thesis from Phase 2}
+> Commitment mode under evaluation: {mode}
+> Pitch style: {bold | niche | laser | solid}
 >
 > Source quality bar: cite real sources by URL. If a number isn't directly published, triangulate and show the math with cited inputs. Prefer real customer quotes from Reddit/HN/IndieHackers/G2 over marketing copy. Capture pricing pages with URLs. Flag stale (>2 year old) data as stale.
 >
-> Output the note in the structure described in `references/research-checklist.md` sections 1–9. Save to `./pitches/{slug}/research.md`. Be concise but specific — this note feeds a 5-persona evaluation panel that will hammer any unsupported claim.
+> Output the note in the structure described in `references/research-checklist.md` sections 1–10. Save to `./pitches/{slug}/research.md`. Be concise but specific — this note feeds the 7-investor panel pitch meeting that will hammer any unsupported claim.
 >
-> If you discover the candidate is actually unworkable (TAM is fake, dominant incumbents already own the wedge, distribution is unreachable, unit economics break), say so explicitly in the note's "Why this might not work" section at the end.
+> If you discover the candidate is unworkable (TAM is fake, dominant incumbents already own the wedge, distribution is unreachable, unit economics break, mode-mismatched), say so explicitly in the note's "Why this might not work" section at the end. **Do not soften the finding to keep the candidate viable** — the pitch meeting will use the honest research and the resulting failure becomes part of the user's learning artifacts.
 
-## Killing candidates after research
+## Honest research, not protective research
 
-Don't try to rescue a candidate that research has shown to be weak. Common kill conditions:
+In v1 of this skill, weak research killed candidates and they got dropped from the pool. In v2, weak research **goes into the meeting unchanged** and the panel critiques it honestly. This means:
 
-- TAM, when honestly triangulated, doesn't support the revenue floor.
-- The "wedge" disappears once the real competitive landscape is mapped.
-- Distribution channel evidence is missing or shows the channel doesn't work for solo entrants.
-- Unit economics break at realistic prices.
-- Regulatory or platform risk is severe enough that the personas would unanimously veto.
+- TAM that doesn't support the revenue floor: the panel will say so.
+- The "wedge" disappearing once the competitive landscape is mapped: the panel will say so.
+- Distribution channel evidence missing: the panel will say so.
+- Unit economics breaking at realistic prices: the panel will say so.
+- Regulatory or platform risk severe enough to veto: the panel will say so.
 
-Note the kill in `_brief.md` so the user can see what you tried and why it failed. Then pull the next candidate.
+**Your job in research is to surface the truth, not to protect the pitch from rejection.** The user wants to read both wins and losses. A pitch that fails for a clear, well-researched reason is more useful to the user than a pitch that scrapes by because the research was charitable.
