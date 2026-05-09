@@ -40,6 +40,7 @@ If the user doesn't specify, assume:
 | Pass threshold | Mode-calibrated. See `references/scoring-calibration.md`. |
 | Time / token budget | Run until done. Do not interrupt the user mid-run. |
 | Autonomous after Phase 0 | Yes. After intake confirms, run all phases without interruption and report only when all deliverables are written. |
+| **Output directory** | `./pitches/<run-id>/` (default run-id = today's ISO date `YYYY-MM-DD`; if that exists, append `-2`, `-3`, etc.). User can override the run-id at intake — useful for parallel sessions that would otherwise collide on `./pitches/`. |
 
 The user can override any of these in their prompt. Honor what they say; only fall back to the defaults for anything they didn't specify.
 
@@ -63,7 +64,13 @@ Ask using AskUserQuestion (or a single short message if context already provides
 
 If the conversation already contains enough context (e.g., the user said "/pitch-me 10 dental SMB ideas at part-time-solo mode, all bold"), skip the interview and write the brief directly — but still confirm in one line.
 
-Write the captured intake to `./pitches/_brief.md` and surface a one-paragraph confirmation. Then announce: "Going autonomous now. Will surface only when all deliverables are written."
+**Run ID + output directory** (decide non-blocking, but announce in the confirmation):
+
+- Default `<run-id>` = today's ISO date (e.g., `2026-05-09`). If `./pitches/<that-date>/` already exists from an earlier run today, append `-2`, `-3`, etc.
+- User can override the run-id in their original prompt or in the intake (e.g., `/pitch-me 10 ... into <run-id>`). Examples of memorable run-ids: `passive-niche-2026-05`, `s2-generation`, `dental-deepdive`. Override is most useful when running two parallel Claude Code sessions on the same project — without distinct run-ids they would write into the same files and collide.
+- Once decided, all artifacts for this run live under `./pitches/<run-id>/`. The skill writes the chosen run-id into `_brief.md` so downstream agents know where to put their files.
+
+Write the captured intake to `./pitches/<run-id>/_brief.md` and surface a one-paragraph confirmation that includes the chosen output directory. Then announce: "Going autonomous now. Will surface only when all deliverables are written."
 
 ### Phase 1 — Set up the investor panel
 
@@ -73,7 +80,7 @@ Read `references/investor-panel.md`. Select:
 - **1 rotating Domain Expert** chosen for the run's domain. Build the composite from 3–5 real, verifiable practitioners or thinkers in the domain. (Web research is appropriate here to verify track record.)
 - **1 rotating Customer** chosen as the average ICP buyer for the run's domain. Render as a person with name + occupation + situation.
 
-Write `./pitches/_investor-panel.md` summarizing each avatar's composite, verified track record, radar scores across the 6 consistent axes, and bias profile per commitment mode. Generate `./pitches/_panel-radar.html` from `assets/panel-radar-template.html`.
+Write `./pitches/<run-id>/_investor-panel.md` summarizing each avatar's composite, verified track record, radar scores across the 6 consistent axes, and bias profile per commitment mode. Generate `./pitches/<run-id>/_panel-radar.html` from `assets/panel-radar-template.html`.
 
 ### Phase 2 — Generate the candidate pool (exactly N)
 
@@ -114,7 +121,7 @@ For each of the N candidates, do thorough web research using WebSearch and WebFe
 - **Unit economics** — cost-to-serve per customer at the proposed price; gross margin; breakeven count
 - **Commitment-mode fit** — does the realistic effort profile match the mode? Flag if the idea is secretly more demanding than the mode permits.
 
-See `references/research-checklist.md` for the source-quality bar and the per-candidate research note structure (saved as `./pitches/<slug>/research.md`).
+See `references/research-checklist.md` for the source-quality bar and the per-candidate research note structure (saved as `./pitches/<run-id>/<slug>/research.md`).
 
 **Research is honest, not protective.** If TAM is fake, dominant incumbents already own the wedge, distribution is unreachable, or unit economics break — record that clearly in research.md. Do not abandon the candidate; do not soften the findings to keep it alive. The pitch meeting will then carry that honest assessment forward, and the resulting failure becomes part of the user's learning material.
 
@@ -141,10 +148,10 @@ Run pitch meetings in parallel via subagents when available, since each is self-
 
 ### Phase 5 — Produce the deliverables (full set for ALL N)
 
-Every pitch gets the full deliverable set, pass or fail. The per-pitch directory:
+Every pitch gets the full deliverable set, pass or fail. All paths are anchored to the run directory `./pitches/<run-id>/` chosen in Phase 0. The per-pitch directory:
 
 ```
-./pitches/<slug>/
+./pitches/<run-id>/<slug>/
 ├── one-pager.md              # executive summary
 ├── deck.html                 # visual deck (filled from assets/deck-template.html)
 ├── research.md               # market research note (Phase 3 output)
@@ -167,10 +174,10 @@ Every pitch gets the full deliverable set, pass or fail. The per-pitch directory
 └── meta.json                 # structured pitch metadata for cross-skill use
 ```
 
-Plus run-level files at `./pitches/`:
+Plus run-level files at `./pitches/<run-id>/`:
 
 ```
-./pitches/
+./pitches/<run-id>/
 ├── _brief.md                 # the intake brief (Phase 0 output)
 ├── _investor-panel.md        # the panel for this run with profiles + radar
 ├── _panel-radar.html         # SVG radar visualization of panel biases
@@ -179,6 +186,8 @@ Plus run-level files at `./pitches/`:
 ├── _post-mortem.md           # cross-cutting observations: what landed, what bombed, why
 └── audio-rendering.md        # how to export transcripts to audio (Web Speech / ElevenLabs / etc.)
 ```
+
+The relative paths *inside* each run directory (e.g., what `_index.md` links to as `./<slug>/one-pager.md`, what `season-recap.html` links to as `./<slug>/pitch-meeting/visual-novel.html`) are unchanged — every cross-link is relative to the run directory and stays portable. Only the prefix `./pitches/<run-id>/` is new.
 
 There is no `_killed.md`. Failed pitches are full deliverables in their own slug directory. The `_index.md` ranks all N and surfaces decisions; the `season-recap.html` lets the user binge the episodes; the `_post-mortem.md` synthesizes what the season teaches.
 
@@ -189,16 +198,16 @@ See `references/pitch-structure.md` for section-by-section content of each deliv
 After all deliverables are written, surface to the user:
 
 - One-paragraph summary of the run (N pitches generated, commitment mode, panel used, headline result spread — e.g., "2 INVEST / 4 INTERESTED / 3 SOFT-PASS / 1 PASS")
-- Path to `./pitches/_index.md` and `./pitches/season-recap.html`
+- Path to `./pitches/<run-id>/_index.md` and `./pitches/<run-id>/season-recap.html`
 - Top 3 by composite score with their one-line theses
 - Bottom 2 with one-line "why it failed" (so the user can decide whether to study them)
 - Notable cross-cutting findings from `_post-mortem.md`
 - A note that the per-pitch handoff packets are ready to paste into `/hacky-hours`, `/teach-me`, or `/productionize-me`
-- A note about audio rendering options (`pitches/audio-rendering.md`) — the visual-novel HTML auto-plays via Web Speech API; ElevenLabs / OpenAI TTS / etc. instructions are in the doc.
+- A note about audio rendering options (`./pitches/<run-id>/audio-rendering.md`) — the visual-novel HTML auto-plays via Web Speech API; ElevenLabs / OpenAI TTS / etc. instructions are in the doc.
 
 ## Communicating with the user during the run
 
-The user has explicitly opted into a long, autonomous run. Do **not** interrupt to ask clarifying questions after Phase 0. If you genuinely cannot proceed without more information, write a checkpoint file (`./pitches/_blocked.md`), surface a single message asking for the missing piece, then resume.
+The user has explicitly opted into a long, autonomous run. Do **not** interrupt to ask clarifying questions after Phase 0. If you genuinely cannot proceed without more information, write a checkpoint file (`./pitches/<run-id>/_blocked.md`), surface a single message asking for the missing piece, then resume.
 
 Brief progress pings are OK — short status notes between phases ("Phase 2 done: 18 candidates generated, 6 killed in triage; Phase 3 research starting on the surviving 12") help the user follow along if they're watching, but do not block on a response.
 

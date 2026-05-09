@@ -3,7 +3,7 @@
 For each of the N pitches (pass or fail), produce the full deliverable set. The slug is a 2–4-word kebab-case name derived from the pitch (e.g., `permit-prep-copilot`, `niche-rfp-autodrafter`).
 
 ```
-./pitches/<slug>/
+./pitches/<run-id>/<slug>/
 ├── one-pager.md              # executive summary
 ├── deck.html                 # visual deck (filled from assets/deck-template.html)
 ├── research.md               # market research note (Phase 3 output)
@@ -26,10 +26,10 @@ For each of the N pitches (pass or fail), produce the full deliverable set. The 
 └── meta.json                 # structured pitch metadata for cross-skill use
 ```
 
-Run-level files at `./pitches/`:
+Run-level files at `./pitches/<run-id>/`:
 
 ```
-./pitches/
+./pitches/<run-id>/
 ├── _brief.md                 # the intake brief (Phase 0 output)
 ├── _investor-panel.md        # the panel for this run with profiles + radar
 ├── _panel-radar.html         # SVG radar visualization of panel biases
@@ -38,6 +38,8 @@ Run-level files at `./pitches/`:
 ├── _post-mortem.md           # cross-cutting observations: what landed, what bombed, why
 └── audio-rendering.md        # how to export transcripts to audio
 ```
+
+The `<run-id>` is chosen during Phase 0 intake (default: today's ISO date `YYYY-MM-DD`; override for parallel sessions). All cross-links inside the run directory are relative — moving or renaming the run-id root is safe.
 
 There is no `_killed.md` in v2. Failed pitches are first-class artifacts in their own slug directories.
 

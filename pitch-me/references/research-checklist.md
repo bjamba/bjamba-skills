@@ -2,7 +2,7 @@
 
 Each of the N candidates gets one research pass before it goes into the simulated pitch meeting. Use WebSearch and WebFetch against real sources. Spawn an Explore subagent if available — research benefits from parallelism.
 
-The output of this phase is a structured research note (`./pitches/<slug>/research.md`) that the panel reads alongside the one-pager during the meeting.
+The output of this phase is a structured research note (`./pitches/<run-id>/<slug>/research.md`) that the panel reads alongside the one-pager during the meeting.
 
 In v2 of the skill, **every candidate gets full research and a full meeting regardless of how the research lands**. If research surfaces a fatal flaw, *that flaw becomes part of the pitch's deliverables* — the panel will critique it accordingly and the user will read it as a documented learning artifact. Do not soften research findings to make a candidate look more passable.
 
@@ -27,7 +27,7 @@ If a number can't be sourced, **say so explicitly** in the research note ("TAM n
 
 ## Research note structure
 
-Produce this exact structure for each candidate, saved to `./pitches/<slug>/research.md`:
+Produce this exact structure for each candidate, saved to `./pitches/<run-id>/<slug>/research.md`:
 
 ### 1. Market sizing
 - TAM: total addressable, with the unit of analysis and the source.
@@ -96,7 +96,7 @@ When spawning an Explore subagent for research, give it this prompt (adapt the c
 >
 > Source quality bar: cite real sources by URL. If a number isn't directly published, triangulate and show the math with cited inputs. Prefer real customer quotes from Reddit/HN/IndieHackers/G2 over marketing copy. Capture pricing pages with URLs. Flag stale (>2 year old) data as stale.
 >
-> Output the note in the structure described in `references/research-checklist.md` sections 1–10. Save to `./pitches/{slug}/research.md`. Be concise but specific — this note feeds the 7-investor panel pitch meeting that will hammer any unsupported claim.
+> Output the note in the structure described in `references/research-checklist.md` sections 1–10. Save to `./pitches/{run-id}/{slug}/research.md`. Be concise but specific — this note feeds the 7-investor panel pitch meeting that will hammer any unsupported claim.
 >
 > If you discover the candidate is unworkable (TAM is fake, dominant incumbents already own the wedge, distribution is unreachable, unit economics break, mode-mismatched), say so explicitly in the note's "Why this might not work" section at the end. **Do not soften the finding to keep the candidate viable** — the pitch meeting will use the honest research and the resulting failure becomes part of the user's learning artifacts.
 
