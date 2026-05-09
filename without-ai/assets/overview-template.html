@@ -1,0 +1,278 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>{{PROJECT_TITLE}} — without-ai overview</title>
+<style>
+  :root {
+    --bg: #fafaf7;
+    --ink: #14140f;
+    --muted: #5b5b50;
+    --rule: #d6d3c4;
+    --accent: #b04b1a;
+    --ai-tint: #f4e6df;
+    --infra-tint: #e2ebe0;
+    --code-bg: #1f1f18;
+    --code-ink: #e8e6dc;
+    --maxw: 1080px;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font: 16px/1.6 ui-serif, Georgia, "Iowan Old Style", serif;
+    -webkit-font-smoothing: antialiased;
+  }
+  .wrap { max-width: var(--maxw); margin: 0 auto; padding: 48px 28px 96px; }
+  header.title {
+    border-bottom: 1px solid var(--rule);
+    padding-bottom: 28px;
+    margin-bottom: 36px;
+  }
+  header.title .eyebrow {
+    font: 600 11px/1 ui-sans-serif, -apple-system, system-ui, sans-serif;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 12px;
+  }
+  h1 {
+    font: 700 38px/1.15 ui-serif, Georgia, serif;
+    margin: 0 0 8px;
+    letter-spacing: -0.01em;
+  }
+  header.title .meta {
+    font: 14px/1.5 ui-sans-serif, system-ui, sans-serif;
+    color: var(--muted);
+  }
+  h2 {
+    font: 700 24px/1.2 ui-serif, Georgia, serif;
+    margin: 56px 0 12px;
+    letter-spacing: -0.005em;
+  }
+  h3 {
+    font: 600 17px/1.3 ui-sans-serif, system-ui, sans-serif;
+    margin: 28px 0 8px;
+    color: var(--ink);
+  }
+  p { margin: 0 0 14px; }
+  blockquote {
+    margin: 0 0 18px;
+    padding: 10px 18px;
+    border-left: 3px solid var(--accent);
+    background: #fff;
+    color: var(--ink);
+    font-style: italic;
+  }
+  code {
+    font: 13px/1.5 ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+    background: rgba(20,20,15,0.06);
+    padding: 1px 5px;
+    border-radius: 3px;
+  }
+  pre {
+    background: var(--code-bg);
+    color: var(--code-ink);
+    padding: 14px 16px;
+    border-radius: 4px;
+    overflow-x: auto;
+    font: 13px/1.5 ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  }
+  pre code { background: transparent; padding: 0; color: inherit; }
+  ul, ol { padding-left: 22px; margin: 0 0 14px; }
+  li { margin-bottom: 6px; }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 16px 0 24px;
+    font: 14px/1.5 ui-sans-serif, system-ui, sans-serif;
+  }
+  th, td {
+    text-align: left;
+    padding: 10px 12px;
+    border-bottom: 1px solid var(--rule);
+    vertical-align: top;
+  }
+  th {
+    font-weight: 600;
+    background: rgba(20,20,15,0.04);
+  }
+  /* The split: AI fork vs without-ai fork */
+  .fork {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+    margin: 18px 0 28px;
+  }
+  @media (max-width: 720px) { .fork { grid-template-columns: 1fr; } }
+  .fork > div {
+    padding: 18px 20px;
+    border-radius: 6px;
+  }
+  .fork .ai-side {
+    background: var(--ai-tint);
+    border: 1px solid #e8c9b7;
+  }
+  .fork .infra-side {
+    background: var(--infra-tint);
+    border: 1px solid #c2d4be;
+  }
+  .fork h3 {
+    margin-top: 0;
+    margin-bottom: 8px;
+    font: 600 12px/1 ui-sans-serif, system-ui, sans-serif;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  .fork .label {
+    font: 700 18px/1.3 ui-serif, Georgia, serif;
+    margin: 0 0 10px;
+  }
+  .mermaid {
+    background: #fff;
+    border: 1px solid var(--rule);
+    border-radius: 4px;
+    padding: 18px;
+    margin: 14px 0 22px;
+    overflow-x: auto;
+  }
+  .badge {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 999px;
+    background: var(--accent);
+    color: #fff;
+    font: 600 11px/1.4 ui-sans-serif, system-ui, sans-serif;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    vertical-align: middle;
+  }
+  hr {
+    border: 0;
+    border-top: 1px solid var(--rule);
+    margin: 56px 0;
+  }
+  footer {
+    margin-top: 64px;
+    padding-top: 24px;
+    border-top: 1px solid var(--rule);
+    font: 13px/1.5 ui-sans-serif, system-ui, sans-serif;
+    color: var(--muted);
+  }
+  footer a { color: var(--accent); }
+  /* Pull-quote callout for the abstracted target ("what you're actually building") */
+  .what-youre-building {
+    background: #fff;
+    border: 1px solid var(--rule);
+    border-left: 4px solid var(--accent);
+    padding: 18px 22px;
+    margin: 14px 0 28px;
+    border-radius: 0 4px 4px 0;
+    font: 17px/1.55 ui-serif, Georgia, serif;
+  }
+  .what-youre-building strong { color: var(--accent); }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header class="title">
+  <div class="eyebrow">/without-ai · run {{RUN_ID}}</div>
+  <h1>{{PROJECT_TITLE}}</h1>
+  <div class="meta">{{ONE_LINE_SUMMARY}}</div>
+</header>
+
+<h2>The original prompt</h2>
+<blockquote>{{ORIGINAL_PROMPT}}</blockquote>
+
+<h2>What you're actually building</h2>
+<div class="what-youre-building">
+  {{ABSTRACTED_TARGET_PARAGRAPH}}
+</div>
+
+<h2>The fork: AI answer vs without-ai answer</h2>
+<div class="fork">
+  <div class="ai-side">
+    <h3>If you'd asked an LLM</h3>
+    <div class="label">{{AI_FORK_HEADLINE}}</div>
+    {{AI_FORK_BODY_HTML}}
+  </div>
+  <div class="infra-side">
+    <h3>The without-ai answer</h3>
+    <div class="label">{{INFRA_FORK_HEADLINE}}</div>
+    {{INFRA_FORK_BODY_HTML}}
+  </div>
+</div>
+
+<h2>Why this category of prompt is brittle for an LLM</h2>
+{{BRITTLENESS_ANALYSIS_HTML}}
+
+<h2>Architecture</h2>
+<h3>Components</h3>
+<div class="mermaid">
+{{COMPONENT_DIAGRAM_MERMAID}}
+</div>
+
+<h3>How a single request flows through the system</h3>
+<div class="mermaid">
+{{DATAFLOW_DIAGRAM_MERMAID}}
+</div>
+
+<h3>Deployment</h3>
+<div class="mermaid">
+{{DEPLOYMENT_DIAGRAM_MERMAID}}
+</div>
+
+<h3>Component descriptions</h3>
+{{COMPONENT_DESCRIPTIONS_HTML}}
+
+<h2>AI dependency over time</h2>
+<p>The goal is steady-state AI dependency at zero or near-zero. AI is acceptable as a one-time bootstrap at build time and as an explicit, optional fallback for never-seen-before inputs (with logging so those inputs can be folded into the system).</p>
+<div class="mermaid">
+{{AI_DEPENDENCY_TIMELINE_MERMAID}}
+</div>
+{{AI_DEPENDENCY_TABLE_HTML}}
+
+<h2>Asset-creation tools</h2>
+<p>{{ASSET_TOOLS_INTRO}}</p>
+{{ASSET_TOOLS_HTML}}
+
+<h2>Roadmap</h2>
+<p>Phased plan calibrated to a solo builder. Time estimates are honest — most of these projects are months of evenings, not weekends.</p>
+{{ROADMAP_HTML}}
+
+<h2>Benefits</h2>
+{{BENEFITS_HTML}}
+
+<h2>What you give up</h2>
+{{TRADEOFFS_HTML}}
+
+<h2>What's next</h2>
+<p>Three handoff packets are ready in <code>handoff/</code>:</p>
+<ul>
+  <li><strong><code>handoff/teach-me.md</code></strong> — paste into <code>/teach-me</code> for a curriculum that teaches the skills behind every component above.</li>
+  <li><strong><code>handoff/productionize-me.md</code></strong> — a prompt that builds this infrastructure end-to-end, plus an audit prompt for <code>/productionize-me</code> after.</li>
+  <li><strong><code>handoff/hacky-hours.md</code></strong> — paste into <code>/hacky-hours</code> to scope the build as a recurring evening project.</li>
+</ul>
+<p>{{PHASE_2_OFFER}}</p>
+
+<footer>
+  Generated by <a href="https://github.com/bjamba/bjamba-skills">/without-ai</a>. Run id: <code>{{RUN_ID}}</code>. Original prompt and full markdown are at <code>./_overview.md</code>.
+</footer>
+
+</div>
+
+<script type="module">
+  import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs";
+  mermaid.initialize({
+    startOnLoad: true,
+    theme: "neutral",
+    fontFamily: "ui-sans-serif, system-ui, sans-serif",
+    securityLevel: "loose",
+  });
+</script>
+</body>
+</html>

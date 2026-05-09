@@ -186,6 +186,54 @@ what could a solo founder with $0 and a day job actually ship and monetize?
 - **`./pitches/<slug>/red-team.md`** — top objections with answers, plus the "what would make this idea wrong" stress-test
 - **`./pitches/<slug>/research.md`** — full research note with link-cited TAM, competitors, customer evidence, unit economics
 
+### without-ai
+
+Takes a prompt — the kind a person would normally throw at an LLM — and produces a comprehensive plan for an **AI-free (or AI-trending-to-zero) infrastructure** that answers it durably. Runnable on local hardware, build­able with AI as a one-time bootstrap, maintainable by a solo person. Optionally scaffolds the actual repo and uses it to answer the original prompt.
+
+The premise: an LLM answer is a transient artifact. For some prompts ("name my band") that's fine. For many — *"build me a clone of Magic: The Gathering"*, *"plan my week given everything you know about me"*, *"triage this support email"* — the prompt is a brittle stand-in for infrastructure the user actually needs. This skill identifies those cases, abstracts upward (MTG → card-game engine; weekly planner → personal data layer + planner; LLM-on-each-ticket → rules engine + reply-template library), designs the infrastructure, and optionally builds it.
+
+**What it does:**
+
+1. **Restates the prompt and sketches the AI answer** — what an LLM would actually generate, what feels impressive at 30 seconds and breaks down on the 30th use
+2. **Categorizes the brittleness** — which classes of prompts (asset-generation, repeated-pattern, stateful, deterministic-rules, personal-context, creative-tool, search-as-Q&A) does this fall into, and is the without-ai treatment even worth it
+3. **Abstracts upward** — frames the *actual* target one level above the literal prompt (MTG → card battler engine; "track my workouts" → workout database with heuristics; "answer customer questions" → knowledge base + retrieval)
+4. **Designs the architecture** — component diagram, data-flow diagram, deployment diagram, with each component named and described. Local-hostable, solo-maintainable
+5. **Plots the AI-trending-to-zero curve** — what role AI plays per phase, with steady-state at zero or near-zero
+6. **Designs the asset-creation tools** — when the prompt implicates art / copy / level layouts / lesson plans / cards, the without-ai answer is almost always *an editor or generator the user uses themselves*, not "we'll have AI make it"
+7. **Roadmap calibrated to a solo builder** — phased, with honest evening/weekend estimates and per-phase AI dependency tracking
+8. **Handoff packets** — copy-pasteable prompts for `/teach-me` (curriculum to learn the skills you need), `/productionize-me` (vibe-code prompt to build the infra, plus an audit prompt for after), `/hacky-hours` (recurring evening project framing)
+9. **Optional Phase 2 — build and prove** — scaffolds the actual repo, builds the smallest vertical slice that exercises every component, uses it to answer the original prompt, writes human-readable docs (README / ARCHITECTURE / GETTING_STARTED / LIMITATIONS) so a solo person can take over
+
+**Usage:**
+
+```
+/without-ai build me a clone of Magic: The Gathering
+```
+
+Or naturally:
+
+```
+i keep dumping my whole life into chatgpt every monday morning to get help planning my week. what would the without-ai version of this look like?
+```
+
+```
+i'm spending $80/mo on Claude API to triage support emails. what would a self-owned version of this look like?
+```
+
+```
+what's the long-term version of asking an LLM to generate D&D dungeons for me?
+```
+
+**What it produces** (per run, under `./without-ai/<run-id>/`):
+
+- **`_overview.md` + `_overview.html`** — the authoritative plan with embedded Mermaid diagrams (component, data-flow, deployment, AI-dependency timeline). HTML is a standalone rendered version suitable to share
+- **`architecture/<component>.md`** — per-component design docs (data model, engine, editor, deployment, etc.)
+- **`roadmap.md`** — phased plan with explicit AI-dependency-at-end-of-phase tracking
+- **`ai-vs-without-ai.md`** — side-by-side AI-fork-vs-without-ai-fork analysis, plus a "why this category of prompt is brittle to put in front of an LLM" generalization that's reusable across the next ten similar prompts
+- **`benefits.md`** — honest gains and tradeoffs (the user gives up speed-to-first-answer; they gain ownership, durability, $0 running cost, no rate limits, no vendor lock-in)
+- **`handoff/teach-me.md` / `handoff/productionize-me.md` / `handoff/hacky-hours.md`** — pre-filled, copy-pasteable handoff packets for the next skill in the chain
+- **(optional Phase 2) `repo/`** — scaffolded repo with the smallest vertical slice that exercises every component, plus `PROOF.md` showing the system answering the original prompt and human-readable docs for a solo person to keep building
+
 ## Installation
 
 Claude Code discovers skills one level deep in `~/.claude/skills/`. Since this repo contains multiple skills in subdirectories, you clone it once and then symlink each skill into the right place.
@@ -202,6 +250,7 @@ ln -sf ~/.claude/skills/bjamba-skills/continuity-check ~/.claude/skills/continui
 ln -sf ~/.claude/skills/bjamba-skills/draft-me ~/.claude/skills/draft-me
 ln -sf ~/.claude/skills/bjamba-skills/productionize-me ~/.claude/skills/productionize-me
 ln -sf ~/.claude/skills/bjamba-skills/pitch-me ~/.claude/skills/pitch-me
+ln -sf ~/.claude/skills/bjamba-skills/without-ai ~/.claude/skills/without-ai
 ```
 
 Restart your Claude Code session. Skills will be available by their slash command (e.g. `/teach-me`, `/draft-me`, `/continuity-check`) or will activate automatically based on context.
@@ -232,6 +281,7 @@ ln -sf .claude/skills/bjamba-skills/continuity-check .claude/skills/continuity-c
 ln -sf .claude/skills/bjamba-skills/draft-me .claude/skills/draft-me
 ln -sf .claude/skills/bjamba-skills/productionize-me .claude/skills/productionize-me
 ln -sf .claude/skills/bjamba-skills/pitch-me .claude/skills/pitch-me
+ln -sf .claude/skills/bjamba-skills/without-ai .claude/skills/without-ai
 ```
 
 ## Structure
@@ -258,24 +308,13 @@ bjamba-skills/
 │   ├── SKILL.md
 │   ├── references/
 │   └── evals/
-└── pitch-me/
+├── pitch-me/
+│   ├── SKILL.md
+│   ├── references/
+│   └── assets/
+└── without-ai/
     ├── SKILL.md
     ├── references/
-    └── assets/
+    ├── assets/
+    └── evals/
 ```
-
-## Tested skills
-
-**teach-me** has been tested with:
-
-- Wine & cheese pairing (non-technical learner)
-- ML classification (junior data scientist)
-- Modern world history (engineer filling knowledge gaps)
-- Rust programming (experienced Go/C++ developer)
-- Active listening (personal development / soft skill)
-
-**draft-me** has been tested with:
-
-- Fresh folder scaffold (cover-letters setup from scratch)
-- Full drafting session on a configured folder (cover letter for a senior-engineer role)
-- Mid-session review feedback integration (redline + clean v3 from reviewer comments)

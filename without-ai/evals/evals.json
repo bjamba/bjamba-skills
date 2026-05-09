@@ -1,0 +1,66 @@
+{
+  "skill_name": "without-ai",
+  "evals": [
+    {
+      "id": 1,
+      "name": "mtg-clone",
+      "prompt": "/without-ai build me a clone of Magic: The Gathering. I want to be able to play it solo or with friends, eventually have my own card sets, and not be locked into Wizards of the Coast's release schedule. I'm a hobbyist programmer (decent at Python, dabbled in Rust), I have evenings and most Saturdays, and I'd want this to run on my laptop or a spare Raspberry Pi. Don't generate the actual cards yet — I want to see the plan first.",
+      "files": [],
+      "assertions": [
+        {"text": "Output dir contains all six core artifact files (_overview.md, _overview.html, ai-vs-without-ai.md, roadmap.md, benefits.md, _brief.md)"},
+        {"text": "Output dir contains all three handoff packets (handoff/teach-me.md, handoff/productionize-me.md, handoff/hacky-hours.md)"},
+        {"text": "_overview.html has no unsubstituted {{PLACEHOLDER}} tokens remaining in the rendered content"},
+        {"text": "_overview.md or ai-vs-without-ai.md explicitly names at least one brittle-prompt category from the taxonomy (e.g., 'asset-generation-disguised-as-question', 'deterministic-rules-disguised-as-prose')"},
+        {"text": "_overview.md abstracts upward to a generic engine ('card-game engine', 'card battler engine', etc.) — not just 'an MTG clone'"},
+        {"text": "_overview.md includes at least two Mermaid diagrams (component + data flow, or component + deployment)"},
+        {"text": "Architecture explicitly proposes a rules DSL or rules-evaluation engine as a component"},
+        {"text": "Architecture explicitly proposes a custom card editor or card-authoring tool as a component"},
+        {"text": "roadmap.md has multiple phases with explicit AI-dependency-at-end-of-phase tracking (in steady-state target is zero or near-zero)"},
+        {"text": "Handoff packets have no unfilled <...> angle-bracket placeholders (only acceptable form is explicit '[user: please fill in <thing>]' for things genuinely not captured at intake)"},
+        {"text": "Phase 2 was NOT executed — no `repo/` directory was created (the prompt said 'I want to see the plan first')"},
+        {"text": "Final summary message offers Phase 2 as the next opt-in step"}
+      ]
+    },
+    {
+      "id": 2,
+      "name": "weekly-life-planner",
+      "prompt": "/without-ai i keep dumping my whole life into chatgpt every monday morning to get help planning my week — my work projects, my kids' schedules, my workouts, what's in the fridge, what i'm reading, my therapy stuff, my friends' birthdays. it works ok but i hate re-explaining everything every time and i'm worried about the privacy of all this. what would the without-ai version of this look like for me? i'm a software engineer, comfortable with the terminal, would prefer to host on my home nas if possible.",
+      "files": [],
+      "assertions": [
+        {"text": "Output dir contains all six core artifact files"},
+        {"text": "Output dir contains all three handoff packets"},
+        {"text": "_overview.html has no unsubstituted {{PLACEHOLDER}} tokens"},
+        {"text": "Identifies category 5 (personal-context-that-should-be-durable) from the brittle-prompt taxonomy"},
+        {"text": "Abstracts upward — the framing is something like 'personal data layer' or 'personal context store + planner', not just 'a weekly planner app'"},
+        {"text": "Proposes human-readable file format for the personal context (markdown, YAML, or similar in a folder structure) — not an opaque database the user can't hand-edit"},
+        {"text": "Architecture explicitly addresses the home-NAS hosting constraint (e.g., docker-compose, single binary, or syncthing/git-based approach)"},
+        {"text": "Privacy is explicitly addressed in benefits.md or _overview.md — no cloud LLM call required in steady state"},
+        {"text": "_overview.md includes at least two Mermaid diagrams"},
+        {"text": "roadmap.md has explicit AI-dependency-at-end-of-phase tracking"},
+        {"text": "Handoff packets have no unfilled <...> angle-bracket placeholders"},
+        {"text": "Phase 2 was NOT executed — no `repo/` directory created"}
+      ]
+    },
+    {
+      "id": 3,
+      "name": "support-triage",
+      "prompt": "/without-ai I run a small SaaS (around 200 paying customers) and I'm currently using Claude to triage every incoming support email — it categorizes them (bug / feature request / billing / how-to), drafts a reply, and tags the priority. It works but it costs me ~$80/mo in API fees and sometimes it gets the categorization wrong in subtle ways, especially for billing edge cases. I want to move this to something I own. What would that look like?",
+      "files": [],
+      "assertions": [
+        {"text": "Output dir contains all six core artifact files"},
+        {"text": "Output dir contains all three handoff packets"},
+        {"text": "_overview.html has no unsubstituted {{PLACEHOLDER}} tokens"},
+        {"text": "Identifies category 2 (repeated-instance-of-the-same-pattern) from the brittle-prompt taxonomy"},
+        {"text": "Architecture proposes a rules-engine-over-taxonomy approach for categorization, not LLM-on-each-ticket"},
+        {"text": "LLM is either eliminated entirely from steady state OR explicitly demoted to fallback-only / parser-only with logging so misses become rules"},
+        {"text": "Architecture includes a reply-template library or canned-response store (asset-tool subproblem)"},
+        {"text": "ai-vs-without-ai.md or benefits.md gives an honest cost comparison ($80/mo vs ~$0 running cost), AND honestly notes the build-time cost"},
+        {"text": "Architecture includes a feedback loop — misclassifications turn into rules over time"},
+        {"text": "_overview.md includes at least two Mermaid diagrams"},
+        {"text": "roadmap.md has explicit AI-dependency-at-end-of-phase tracking trending to zero"},
+        {"text": "Handoff packets have no unfilled <...> angle-bracket placeholders"},
+        {"text": "Phase 2 was NOT executed"}
+      ]
+    }
+  ]
+}
