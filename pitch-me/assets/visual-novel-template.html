@@ -255,8 +255,57 @@
   </p>
 </div>
 
+<style>
+  /* Voice picker UI (added by 2026-05-09 voice-quality patch) */
+  .player .upgrade-link {
+    color: var(--accent); text-decoration: none; font-size: .8rem;
+    padding: .4em .8em; border: 1px solid var(--accent); border-radius: 6px;
+    white-space: nowrap;
+  }
+  .player .upgrade-link:hover { background: var(--accent); color: #1a1500; }
+
+  .voice-settings {
+    position: fixed; bottom: 84px; left: 1.2em; right: 1.2em;
+    max-width: 760px; margin: 0 auto;
+    background: var(--bg-elev); border: 1px solid var(--rule); border-radius: 12px;
+    padding: 1.4em 1.6em; z-index: 110;
+    box-shadow: 0 8px 32px rgba(0,0,0,.5);
+    max-height: 70vh; overflow-y: auto;
+  }
+  .vs-header { display: flex; justify-content: space-between; align-items: center; }
+  .vs-header h3 { margin: 0; font-size: 1.05rem; color: var(--accent); }
+  .vs-close { background: transparent; color: var(--muted); border: none; font-size: 1.6rem; cursor: pointer; line-height: 1; padding: 0 .3em; }
+  .vs-hint { color: var(--muted); font-size: .82rem; margin: .5em 0 1em; line-height: 1.5; }
+  .vs-hint a { color: var(--accent); }
+  .vs-hint strong { color: var(--fg); }
+
+  .vs-mode-row { display: flex; gap: .8em; align-items: center; padding: .6em 0; border-bottom: 1px solid var(--rule); }
+  .vs-mode-row label { font-size: .85rem; flex: 0 0 130px; color: var(--muted); }
+  .vs-mode-row select { flex: 1; }
+
+  .vs-grid { display: grid; grid-template-columns: 130px 1fr 60px; gap: .55em .8em; align-items: center; margin: .8em 0; }
+  .vs-grid .vs-spk { font-size: .85rem; font-weight: 600; }
+  .vs-grid select, .vs-mode-row select {
+    background: var(--bg); color: var(--fg); border: 1px solid var(--rule);
+    border-radius: 6px; padding: .35em .5em; font-size: .85rem;
+  }
+  .vs-grid .vs-test, .vs-mode-row .vs-test {
+    background: var(--bg); color: var(--fg); border: 1px solid var(--rule);
+    border-radius: 4px; padding: .3em .5em; cursor: pointer; font-size: .75rem;
+  }
+  .vs-grid .vs-test:hover, .vs-mode-row .vs-test:hover { border-color: var(--accent); }
+
+  .vs-actions { display: flex; gap: 1.2em; align-items: center; flex-wrap: wrap; margin-top: 1.2em; padding-top: 1em; border-top: 1px solid var(--rule); font-size: .82rem; color: var(--muted); }
+  .vs-actions label { display: inline-flex; align-items: center; gap: .35em; cursor: pointer; }
+  .vs-actions button { background: var(--bg); color: var(--fg); border: 1px solid var(--rule); border-radius: 6px; padding: .4em .8em; cursor: pointer; font-size: .82rem; }
+  .vs-actions button:hover { border-color: var(--accent); }
+
+  .vs-tip { background: rgba(255,184,74,.08); border-left: 3px solid var(--accent); padding: .7em .9em; margin-top: 1em; border-radius: 4px; font-size: .8rem; color: var(--muted); line-height: 1.55; }
+  .vs-tip strong { color: var(--fg); }
+</style>
+
 <div class="player">
-  <button id="playBtn">▶ Play episode</button>
+  <button id="playBtn">▶ Play</button>
   <button id="pauseBtn" class="secondary" style="display:none">⏸ Pause</button>
   <button id="stopBtn" class="secondary">⏹ Stop</button>
   <select id="speedSel" title="Playback speed">
@@ -266,52 +315,199 @@
     <option value="1.3">1.3×</option>
     <option value="1.5">1.5×</option>
   </select>
-  <select id="voiceProfile" title="Voice profile">
-    <option value="auto" selected>Auto-assign voices</option>
-    <option value="single">Single voice (narrator)</option>
+  <select id="voiceProfile" title="Voice profile mode">
+    <option value="auto" selected>Per-speaker voices</option>
+    <option value="single">Single narrator</option>
   </select>
+  <button id="settingsBtn" class="secondary" title="Customize voices">⚙ Voices</button>
   <div class="status" id="statusText">Ready. Click play.</div>
-  <div class="audio-tip">Web Speech API quality varies by browser/OS. For studio audio, use ElevenLabs / OpenAI TTS — see audio-rendering.md.</div>
+  <a class="upgrade-link" href="../../audio-rendering.md" title="Render to MP3 via OpenAI TTS or ElevenLabs">Studio audio →</a>
+</div>
+
+<div class="voice-settings" id="voiceSettings" style="display:none">
+  <div class="vs-header">
+    <h3>Voice Settings</h3>
+    <button class="vs-close" id="closeSettings" title="Close">×</button>
+  </div>
+  <p class="vs-hint">Pick voices that sound good to you. Settings save to your browser and apply to every episode in this season. <strong>Singsong voices?</strong> Try the Premium / Enhanced filter, switch to Single-narrator mode with one voice you like, or render to <a href="../../audio-rendering.md">studio-quality audio (~$2 for the season via OpenAI TTS)</a>.</p>
+
+  <div class="vs-mode-row vs-single-row" style="display:none">
+    <label>Single voice:</label>
+    <select id="vs-single" data-speaker="SINGLE"></select>
+    <button class="vs-test" data-test="SINGLE">Test</button>
+  </div>
+
+  <div class="vs-grid" id="vs-perspeaker">
+    <!-- populated by JS -->
+  </div>
+
+  <div class="vs-actions">
+    <label><input type="checkbox" id="vs-en-only" checked> English voices only</label>
+    <label><input type="checkbox" id="vs-quality"> Premium / Enhanced / Neural only</label>
+    <button id="vs-reset">Reset to defaults</button>
+  </div>
+
+  <div class="vs-tip">
+    <strong>Pro tip on macOS:</strong> open System Settings → Accessibility → Spoken Content → System Voice → Manage Voices and download Premium voices (Ava, Tom Premium, Allison, Joelle, Evan). The defaults can sound singsong; Premium voices play through this same in-browser API and are free. After downloading, reload this page so the new voices show up in the dropdowns.
+  </div>
 </div>
 
 <script>
-  // Voice assignment per stable speaker tag.
-  // The Web Speech API exposes the OS's installed voices via speechSynthesis.getVoices().
-  // We try to pick distinct voices per speaker. Falls back to default if voice list is small.
-  const SPEAKER_VOICE_HINTS = {
-    BOOTSTRAPPER:   { gender: 'male',   prefer: ['Daniel', 'Microsoft Guy', 'Google US English Male', 'Alex'] },
-    OPERATOR:       { gender: 'male',   prefer: ['Fred', 'Microsoft David', 'Google UK English Male'] },
-    SEED_VC:        { gender: 'female', prefer: ['Samantha', 'Microsoft Aria', 'Google US English Female', 'Karen'] },
-    GROWTH_VC:      { gender: 'male',   prefer: ['Rishi', 'Microsoft Mark', 'Google UK English Male'] },
-    SKEPTIC:        { gender: 'male',   prefer: ['Albert', 'Microsoft Eric', 'Whisper'] },
-    DOMAIN_EXPERT:  { gender: 'female', prefer: ['Moira', 'Microsoft Jenny', 'Google UK English Female', 'Tessa'] },
-    CUSTOMER:       { gender: 'female', prefer: ['Allison', 'Microsoft Aria', 'Susan'] },
-    FOUNDER:        { gender: 'male',   prefer: ['Tom', 'Microsoft Guy', 'Google US English Male'] },
+  const SPEAKERS = ['BOOTSTRAPPER','OPERATOR','SEED_VC','GROWTH_VC','SKEPTIC','DOMAIN_EXPERT','CUSTOMER','FOUNDER'];
+  const SPEAKER_LABELS = {
+    BOOTSTRAPPER: 'Bootstrapper',
+    OPERATOR: 'Operator',
+    SEED_VC: 'Seed VC',
+    GROWTH_VC: 'Growth VC',
+    SKEPTIC: 'Skeptic',
+    DOMAIN_EXPERT: 'Domain Expert',
+    CUSTOMER: 'Customer',
+    FOUNDER: 'Founder'
   };
+  const DEFAULT_VOICE_HINTS = {
+    BOOTSTRAPPER:   ['Daniel', 'Microsoft Guy', 'Tom (Enhanced)', 'Tom', 'Alex'],
+    OPERATOR:       ['Fred', 'Microsoft David', 'Aaron', 'Daniel'],
+    SEED_VC:        ['Allison', 'Microsoft Aria', 'Karen', 'Samantha (Enhanced)', 'Samantha'],
+    GROWTH_VC:      ['Rishi', 'Microsoft Mark', 'Oliver', 'Daniel'],
+    SKEPTIC:        ['Albert', 'Microsoft Eric', 'Lee', 'Reed'],
+    DOMAIN_EXPERT:  ['Moira', 'Microsoft Jenny', 'Tessa', 'Karen'],
+    CUSTOMER:       ['Allison', 'Susan', 'Microsoft Aria'],
+    FOUNDER:        ['Tom (Enhanced)', 'Tom', 'Microsoft Guy', 'Aaron'],
+  };
+  // Voice-name patterns considered higher-quality (not perfect — Web Speech API doesn't expose a quality flag)
+  const PREMIUM_NAME_HINTS = ['Premium','Enhanced','Neural','Natural','(Enhanced)','(Premium)','Ava','Allison','Tom','Joelle','Evan','Susan','Nathan','Eddy','Flo','Reed','Grandma','Rocko','Shelley'];
+
+  const STORAGE_KEY = 'pitchme.voiceSettings.v2';
+  let userSettings = loadSettings();
+
+  function loadSettings() {
+    try { return JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}'); } catch(e) { return {}; }
+  }
+  function saveSettings() { localStorage.setItem(STORAGE_KEY, JSON.stringify(userSettings)); }
 
   let voices = [];
   function loadVoices() {
     voices = window.speechSynthesis.getVoices() || [];
+    populateAllDropdowns();
   }
   loadVoices();
   if (typeof speechSynthesis !== 'undefined') {
     speechSynthesis.addEventListener('voiceschanged', loadVoices);
   }
 
+  function getFilteredVoices() {
+    const enOnly = document.getElementById('vs-en-only')?.checked ?? true;
+    const qualityOnly = document.getElementById('vs-quality')?.checked ?? false;
+    return voices.filter(v => {
+      if (enOnly && !/^en/i.test(v.lang || '')) return false;
+      if (qualityOnly) {
+        const name = (v.name || '');
+        if (!PREMIUM_NAME_HINTS.some(h => name.includes(h))) return false;
+      }
+      return true;
+    }).sort((a, b) => (a.name || '').localeCompare(b.name || ''));
+  }
+
+  function populateDropdown(select, currentVoiceURI) {
+    if (!select) return;
+    select.innerHTML = '';
+    const filtered = getFilteredVoices();
+    if (!filtered.length) {
+      const opt = document.createElement('option');
+      opt.textContent = '(no voices match — try unchecking filters)';
+      select.appendChild(opt);
+      return;
+    }
+    const placeholder = document.createElement('option');
+    placeholder.value = '';
+    placeholder.textContent = '(default — auto-pick)';
+    select.appendChild(placeholder);
+    for (const v of filtered) {
+      const opt = document.createElement('option');
+      opt.value = v.voiceURI || v.name;
+      opt.textContent = `${v.name} (${v.lang})`;
+      if (currentVoiceURI && (v.voiceURI === currentVoiceURI || v.name === currentVoiceURI)) {
+        opt.selected = true;
+      }
+      select.appendChild(opt);
+    }
+  }
+
+  function populateAllDropdowns() {
+    const grid = document.getElementById('vs-perspeaker');
+    if (!grid) return;
+    grid.innerHTML = '';
+    for (const spk of SPEAKERS) {
+      const lbl = document.createElement('div');
+      lbl.className = 'vs-spk';
+      lbl.textContent = SPEAKER_LABELS[spk];
+      const sel = document.createElement('select');
+      sel.dataset.speaker = spk;
+      sel.addEventListener('change', e => {
+        const val = e.target.value;
+        userSettings.perSpeaker = userSettings.perSpeaker || {};
+        if (val) userSettings.perSpeaker[spk] = val;
+        else delete userSettings.perSpeaker[spk];
+        saveSettings();
+      });
+      const test = document.createElement('button');
+      test.className = 'vs-test';
+      test.dataset.test = spk;
+      test.textContent = 'Test';
+      test.addEventListener('click', () => testVoice(spk));
+      grid.appendChild(lbl);
+      grid.appendChild(sel);
+      grid.appendChild(test);
+      populateDropdown(sel, userSettings.perSpeaker?.[spk]);
+    }
+    const singleSel = document.getElementById('vs-single');
+    if (singleSel) populateDropdown(singleSel, userSettings.singleVoice);
+  }
+
+  function findVoiceByURI(uri) {
+    if (!uri) return null;
+    return voices.find(v => v.voiceURI === uri || v.name === uri);
+  }
+
   function pickVoice(speaker) {
-    const hint = SPEAKER_VOICE_HINTS[speaker] || SPEAKER_VOICE_HINTS.FOUNDER;
+    const profileMode = document.getElementById('voiceProfile')?.value || 'auto';
+    if (profileMode === 'single') {
+      const v = findVoiceByURI(userSettings.singleVoice);
+      if (v) return v;
+      return voices[0] || null;
+    }
+    if (userSettings.perSpeaker?.[speaker]) {
+      const v = findVoiceByURI(userSettings.perSpeaker[speaker]);
+      if (v) return v;
+    }
+    const hints = DEFAULT_VOICE_HINTS[speaker] || DEFAULT_VOICE_HINTS.FOUNDER;
     if (!voices.length) return null;
-    for (const want of hint.prefer) {
+    for (const want of hints) {
       const v = voices.find(x => x.name && x.name.toLowerCase().includes(want.toLowerCase()));
       if (v) return v;
     }
-    // Fallback: pick a stable voice based on speaker hash so each speaker gets a different voice.
     const en = voices.filter(v => /^en/i.test(v.lang));
     const list = en.length ? en : voices;
-    const idx = Object.keys(SPEAKER_VOICE_HINTS).indexOf(speaker);
+    const idx = SPEAKERS.indexOf(speaker);
     return list[Math.abs(idx) % list.length] || null;
   }
 
+  function testVoice(speakerOrSingle) {
+    if (!('speechSynthesis' in window)) return;
+    speechSynthesis.cancel();
+    let v;
+    if (speakerOrSingle === 'SINGLE') {
+      v = findVoiceByURI(userSettings.singleVoice) || voices[0];
+    } else {
+      v = pickVoice(speakerOrSingle);
+    }
+    const u = new SpeechSynthesisUtterance(`This is the ${SPEAKER_LABELS[speakerOrSingle] || 'narrator'} voice. Two and a half percent of two hundred is five customers per quarter.`);
+    u.rate = 1;
+    if (v) u.voice = v;
+    speechSynthesis.speak(u);
+  }
+
+  // Player state and controls
   const turnEls = Array.from(document.querySelectorAll('.turn'));
   let cursor = -1;
   let playing = false;
@@ -323,6 +519,14 @@
   const speedSel = document.getElementById('speedSel');
   const voiceProfile = document.getElementById('voiceProfile');
   const statusText = document.getElementById('statusText');
+  const settingsBtn = document.getElementById('settingsBtn');
+  const settingsPanel = document.getElementById('voiceSettings');
+  const closeSettings = document.getElementById('closeSettings');
+  const singleSel = document.getElementById('vs-single');
+  const singleRow = document.querySelector('.vs-single-row');
+  const enOnlyCB = document.getElementById('vs-en-only');
+  const qualityOnlyCB = document.getElementById('vs-quality');
+  const resetBtn = document.getElementById('vs-reset');
 
   function setStatus(msg) { statusText.textContent = msg; }
 
@@ -343,37 +547,25 @@
     const speaker = el.getAttribute('data-speaker');
     const text = el.querySelector('.text')?.innerText?.trim();
 
-    // Skip section headers and silent stage directions.
     const isHeader = el.classList.contains('section_header');
     const isDirection = el.classList.contains('direction');
-    if (isHeader || !text) {
-      // Brief pause then continue.
-      setTimeout(() => speakTurn(idx + 1), 350);
-      return;
-    }
-
-    if (isDirection) {
-      // Read directions in a softer way — small pause, no voice for now.
-      setTimeout(() => speakTurn(idx + 1), 600);
-      return;
-    }
+    if (isHeader || !text) { setTimeout(() => speakTurn(idx + 1), 350); return; }
+    if (isDirection) { setTimeout(() => speakTurn(idx + 1), 600); return; }
 
     if (!('speechSynthesis' in window)) {
-      setStatus('Web Speech API not supported in this browser. See audio-rendering.md for alternatives.');
+      setStatus('Web Speech API not supported. See audio-rendering.md.');
       return;
     }
 
     const u = new SpeechSynthesisUtterance(text);
     u.rate = parseFloat(speedSel.value);
     u.pitch = 1;
-    if (voiceProfile.value === 'auto' && speaker) {
-      const v = pickVoice(speaker);
-      if (v) u.voice = v;
-    }
+    const v = pickVoice(speaker || 'FOUNDER');
+    if (v) u.voice = v;
     u.onend = () => { if (playing) speakTurn(idx + 1); };
     u.onerror = (e) => { console.warn('TTS error', e); if (playing) speakTurn(idx + 1); };
     currentUtter = u;
-    setStatus('Speaking: ' + (speaker || 'narrator'));
+    setStatus('Speaking: ' + (speaker || 'narrator') + (v ? ' — ' + v.name : ''));
     speechSynthesis.speak(u);
   }
 
@@ -404,40 +596,66 @@
     pauseBtn.style.display = 'none';
     setStatus('Stopped.');
   }
+
   playBtn.addEventListener('click', play);
   pauseBtn.addEventListener('click', () => {
     if (speechSynthesis.paused) {
-      speechSynthesis.resume();
-      playing = true;
+      speechSynthesis.resume(); playing = true;
       playBtn.style.display = 'none';
       pauseBtn.style.display = 'inline-block';
       setStatus('Resumed.');
-    } else {
-      pause();
-    }
+    } else { pause(); }
   });
   stopBtn.addEventListener('click', stop);
 
-  // Click any turn to jump to it.
   turnEls.forEach((el, i) => {
     el.addEventListener('click', () => {
-      stop();
-      cursor = i;
-      speakTurn(i);
+      stop(); cursor = i; speakTurn(i);
       playing = true;
       playBtn.style.display = 'none';
       pauseBtn.style.display = 'inline-block';
     });
   });
 
-  // Speed change applies on next utterance.
   speedSel.addEventListener('change', () => {
-    if (playing && currentUtter) {
-      // Cancel current utterance and re-queue from current cursor at new rate.
-      speechSynthesis.cancel();
-      speakTurn(cursor);
-    }
+    if (playing && currentUtter) { speechSynthesis.cancel(); speakTurn(cursor); }
   });
+
+  voiceProfile.addEventListener('change', () => {
+    const isSingle = voiceProfile.value === 'single';
+    if (singleRow) singleRow.style.display = isSingle ? 'flex' : 'none';
+    userSettings.profileMode = voiceProfile.value;
+    saveSettings();
+    if (playing && currentUtter) { speechSynthesis.cancel(); speakTurn(cursor); }
+  });
+
+  // Voice settings panel
+  settingsBtn.addEventListener('click', () => {
+    settingsPanel.style.display = settingsPanel.style.display === 'none' ? 'block' : 'none';
+  });
+  closeSettings.addEventListener('click', () => { settingsPanel.style.display = 'none'; });
+  if (singleSel) {
+    singleSel.addEventListener('change', e => {
+      userSettings.singleVoice = e.target.value || null;
+      saveSettings();
+    });
+  }
+  enOnlyCB.addEventListener('change', populateAllDropdowns);
+  qualityOnlyCB.addEventListener('change', populateAllDropdowns);
+  resetBtn.addEventListener('click', () => {
+    userSettings = {};
+    localStorage.removeItem(STORAGE_KEY);
+    populateAllDropdowns();
+    if (voiceProfile) voiceProfile.value = 'auto';
+    if (singleRow) singleRow.style.display = 'none';
+    setStatus('Voice settings reset.');
+  });
+
+  // Restore profile mode from localStorage
+  if (userSettings.profileMode === 'single' && voiceProfile) {
+    voiceProfile.value = 'single';
+    if (singleRow) singleRow.style.display = 'flex';
+  }
 </script>
 
 </body>
