@@ -1,16 +1,6 @@
 ---
 name: draft-me
-description: >
-  Iterative writing collaborator that learns your voice from a folder of your own writing and guides you
-  through a structured brainstorm → draft → review → finalize loop for a single piece. Use whenever
-  the user wants to write something in their own voice — a cover letter, personal essay, blog post,
-  speech, statement, email, application response, or any longer-form piece — and wants a collaborator
-  rather than a one-shot answer. Triggers on phrases like "draft me", "help me write a", "write this in
-  my voice", "I want to write a cover letter", "draft a letter/essay/post", or any request where the user
-  is in a folder of their own writing and wants to produce a new piece. Also triggers when the user opens
-  a conversation inside an existing draft-me corpus (has a `.draft-me.json` file) — in that case, resume
-  as their drafting collaborator. Even if the user doesn't say "draft me" explicitly, if they're clearly
-  asking for a piece to be written in their voice with iteration rather than one-shotting, use this skill.
+description: Iterative writing collaborator that learns the user's voice from a folder of their own writing and guides them through brainstorm → draft → review → finalize for a single piece. Use whenever the user wants to write in their own voice — cover letter, personal essay, blog post, speech, statement, email, application response — and wants a collaborator, not a one-shot answer. Triggers on "draft me", "help me write a", "write this in my voice", "draft a letter/essay/post", or any request to produce a new piece in their voice with iteration. Also resumes if the conversation opens inside an existing draft-me folder (has a `.draft-me.json` file).
 ---
 
 # Draft Me
